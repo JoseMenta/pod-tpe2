@@ -10,10 +10,10 @@ import java.io.IOException;
 import java.util.Collections;
 
 public class Server {
-    private static Logger LOGGER = LoggerFactory.getLogger(Server.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        LOGGER.info("Starting Hazelcast server");
+        LOGGER.info("Starting Hazelcast server...");
         //Config
         Config config = new Config();
 
@@ -38,6 +38,6 @@ public class Server {
 
         // Start cluster
         Hazelcast.newHazelcastInstance(config);
-
+        LOGGER.info("Hazelcast server started");
     }
 }

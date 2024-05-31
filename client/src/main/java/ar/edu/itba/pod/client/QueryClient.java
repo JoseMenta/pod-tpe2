@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,13 +35,15 @@ public abstract class QueryClient implements Closeable {
     private static final String INFRACTIONS_CSV = "/infractions";
     private static final String TIME_CSV = "/time.csv";
 
+    private final FileWriter timeFile;
+
     protected final String  csvPath;
     protected final String timePath;
     protected final String infractionPath;
     protected final String ticketPath;
     protected final HazelcastInstance hazelcast;
     protected final City city;
-    public QueryClient(String query) {
+    public QueryClient(String query)  {
         LOGGER.info("Starting Hazelcast client...");
 
         String inPath = System.getProperty("inPath");
@@ -65,6 +68,13 @@ public abstract class QueryClient implements Closeable {
 
         this.infractionPath = inFiles.getAbsolutePath() + INFRACTIONS_CSV + this.city.name() + ".csv";
         this.ticketPath = inFiles.getAbsolutePath() + TICKETS_CSV + this.city.name() + ".csv";
+
+        try {
+            this.timeFile = new FileWriter(timePath);
+        }catch (IOException e){
+            LOGGER.error("Could not open file {} to write time",timePath);
+            throw new RuntimeException(e);
+        }
 
         LOGGER.info("Paths: csvPath={}, timePath={}, infractionPath={}, ticketPath={}", csvPath, timePath, infractionPath, ticketPath);
         this.hazelcast = configureClient();
@@ -127,6 +137,7 @@ public abstract class QueryClient implements Closeable {
                                           Function<D,V> valueMapper,
                                           BiConsumer<K,V> consumer){
         LOGGER.error("Start loading data from {}",csvPath);
+        writeTime("Start loading data from " + csvPath);
         if(this.hazelcast == null){
             throw new IllegalStateException();
         }
@@ -137,6 +148,7 @@ public abstract class QueryClient implements Closeable {
                 K key = keyMapper.apply(data); //extract the key from the value, or other data
                 consumer.accept(key,value);
             });
+            writeTime("Finished loading data for " + csvPath);
             LOGGER.info("Finished loading data for {}",csvPath);
         } catch (IOException e) {
             LOGGER.error("Could not open file {} to load data",csvPath);
@@ -144,9 +156,25 @@ public abstract class QueryClient implements Closeable {
         }
     }
 
+    protected void writeTime(String message){
+        try {
+            timeFile.write(LocalDateTime.now() + " " + message + "\n");
+        } catch (IOException e) {
+            LOGGER.error("Could not write time to file");
+            throw new RuntimeException(e);
+        }
+    }
+
+
     @Override
     public void close()  {
        HazelcastClient.shutdownAll();
+        try {
+            timeFile.close();
+        } catch (IOException e) {
+            LOGGER.error("Could not close time file");
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -81,8 +81,11 @@ public class Query1Client extends QueryClient {
             client.loadInfractions();
             client.loadTickets();
 
+            System.out.println("Started");
             //Execute job
             SortedSet<Query1Result> ans = client.executeJob();
+            System.out.println("Ended");
+
 
             //Print results
             ans.forEach(System.out::println);

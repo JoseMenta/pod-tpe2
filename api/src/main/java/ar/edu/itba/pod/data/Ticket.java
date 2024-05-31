@@ -36,7 +36,7 @@ public class Ticket implements DataSerializable {
     @Override
     public void writeData(ObjectDataOutput out) throws IOException {
         out.writeUTF(plate);
-        out.writeUTF(issueDate.format(DateTimeFormatter.ISO_DATE));
+        out.writeObject(issueDate);
         out.writeUTF(infractionCode);
         out.writeInt(fineAmount);
         out.writeUTF(neighbourhood);
@@ -46,7 +46,7 @@ public class Ticket implements DataSerializable {
     @Override
     public void readData(ObjectDataInput in) throws IOException {
         plate = in.readUTF();
-        issueDate = LocalDateTime.parse(in.readUTF(), DateTimeFormatter.ISO_DATE);
+        issueDate = in.readObject();
         infractionCode = in.readUTF();
         fineAmount = in.readInt();
         neighbourhood = in.readUTF();

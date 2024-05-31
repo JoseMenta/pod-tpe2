@@ -122,7 +122,7 @@ public abstract class QueryClient implements Closeable {
         String[] vals = row.split(CSV_SEPARATOR);
         return new Ticket(
                 vals[1],
-                LocalDateTime.parse(vals[0],DateTimeFormatter.ISO_DATE),
+                LocalDateTime.parse(vals[0],DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 vals[2],
                 Integer.parseInt(vals[4]),
                 vals[5],

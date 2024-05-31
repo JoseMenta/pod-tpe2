@@ -10,6 +10,8 @@ public class Util {
     public static final String HAZELCAST_NETWORK_MASK = "10.103.1.*";
 
     public static final String QUERY_1_NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q1";
-
-
+    public static final String QUERY_2_NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q2";
+    public static final String QUERY_3_NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q3";
+    public static final String QUERY_4_NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q4";
+    public static final String QUERY_5_NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q5";
 }

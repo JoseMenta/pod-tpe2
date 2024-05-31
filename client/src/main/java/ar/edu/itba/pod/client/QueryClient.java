@@ -33,7 +33,7 @@ public abstract class QueryClient implements Closeable {
     private static final String CSV_SEPARATOR = ";";
     private static final String TICKETS_CSV = "/tickets";
     private static final String INFRACTIONS_CSV = "/infractions";
-    private static final String TIME_CSV = "/time.csv";
+    private static final String TIME_TXT = "/time.text";
 
     private final FileWriter timeFile;
 
@@ -64,7 +64,7 @@ public abstract class QueryClient implements Closeable {
         }
 
         this.csvPath = outFiles.getAbsolutePath()+"/"+ query + ".csv";
-        this.timePath = inFiles.getAbsolutePath() + TIME_CSV;
+        this.timePath = inFiles.getAbsolutePath() + TIME_TXT;
 
         this.infractionPath = inFiles.getAbsolutePath() + INFRACTIONS_CSV + this.city.name() + ".csv";
         this.ticketPath = inFiles.getAbsolutePath() + TICKETS_CSV + this.city.name() + ".csv";
@@ -178,6 +178,7 @@ public abstract class QueryClient implements Closeable {
     public void close()  {
        HazelcastClient.shutdownAll();
         try {
+            timeFile.flush();
             timeFile.close();
         } catch (IOException e) {
             LOGGER.error("Could not close time file");

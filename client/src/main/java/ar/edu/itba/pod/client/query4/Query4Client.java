@@ -2,7 +2,6 @@ package ar.edu.itba.pod.client.query4;
 
 import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.client.QueryClient;
-import ar.edu.itba.pod.client.utilities.City;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Pair;
 import ar.edu.itba.pod.data.Ticket;
@@ -17,7 +16,6 @@ import static ar.edu.itba.pod.Util.QUERY_4_NAMESPACE;
 
 public class Query4Client extends QueryClient {
 
-    private static final String NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q4";
     private final Map<String, Infraction> infractionsMap;
 
     private final MultiMap<LocalDateTime, Ticket> ticketsMap;
@@ -29,8 +27,8 @@ public class Query4Client extends QueryClient {
     public Query4Client(String query) {
         super(query);
         this.auxMap = hazelcast.getMap(QUERY_4_NAMESPACE + "-aux");
-        this.infractionsMap = hazelcast.getMap(NAMESPACE);
-        this.ticketsMap = hazelcast.getMultiMap(NAMESPACE);
+        this.infractionsMap = hazelcast.getMap(QUERY_4_NAMESPACE);
+        this.ticketsMap = hazelcast.getMultiMap(QUERY_4_NAMESPACE);
         String fromString = System.getProperty("from");
         String toString = System.getProperty("to");
         if (fromString == null || toString == null) {
@@ -49,25 +47,11 @@ public class Query4Client extends QueryClient {
     }
 
     private void loadTickets( ){
-
-        switch (city){
-            case NYC:
-                loadData(this.csvPath,
-                        this::nyTicketMapper, //TODO: change based on NY or Chicago
-                        Ticket::issueDate,
-                        i -> i,
-                        ticketsMap::put);
-                break;
-            case CHI:
-                loadData(this.csvPath,
-                        this:: chicagoTicketMapper, //TODO: change based on NY or Chicago
-                        Ticket::issueDate,
-                        i -> i,
-                        ticketsMap::put);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid city");
-        }
+        loadData(this.ticketPath,
+                getMapper(),
+                Ticket::issueDate,
+                i -> i,
+                ticketsMap::put);
 
     }
 

@@ -35,26 +35,11 @@ public class Query1Client extends QueryClient {
     }
 
     private void loadTickets(){
-
-        switch (this.city){
-            case NYC:
-                loadData(this.ticketPath,
-                        this::nyTicketMapper, //TODO: change based on NY or Chicago
-                        Ticket::infractionCode,
-                        i -> i,
-                        ticketsMap::put);
-                break;
-            case CHI:
-                loadData(this.ticketPath,
-                        this:: chicagoTicketMapper, //TODO: change based on NY or Chicago
-                        Ticket::infractionCode,
-                        i -> i,
-                        ticketsMap::put);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid city");
-        }
-
+        loadData(this.ticketPath,
+                getMapper(),
+                Ticket::infractionCode,
+                i -> i,
+                ticketsMap::put);
     }
 
     @Override

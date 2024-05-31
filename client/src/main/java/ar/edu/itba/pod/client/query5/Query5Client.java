@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class Query5Client extends QueryClient {
 
-    private static final String NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q5";
     private final Map<String, Infraction> infractionsMap;
 
     private final MultiMap<String, Ticket> ticketsMap;
@@ -19,8 +18,8 @@ public class Query5Client extends QueryClient {
 
     public Query5Client(String query) {
         super(query);
-        this.infractionsMap = hazelcast.getMap(NAMESPACE);
-        this.ticketsMap = hazelcast.getMultiMap(NAMESPACE);
+        this.infractionsMap = hazelcast.getMap(Util.QUERY_5_NAMESPACE);
+        this.ticketsMap = hazelcast.getMultiMap(Util.QUERY_5_NAMESPACE);
 
     }
     private void loadInfractions(){
@@ -32,26 +31,11 @@ public class Query5Client extends QueryClient {
     }
 
     private void loadTickets( ){
-
-        switch (this.city){
-            case NYC:
-                loadData(this.csvPath,
-                        this::nyTicketMapper, //TODO: change based on NY or Chicago
-                        Ticket::infractionCode,
-                        i -> i,
-                        ticketsMap::put);
-                break;
-            case CHI:
-                loadData(this.csvPath,
-                        this:: chicagoTicketMapper, //TODO: change based on NY or Chicago
-                        Ticket::infractionCode,
-                        i -> i,
-                        ticketsMap::put);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid city");
-        }
-
+        loadData(this.ticketPath,
+                getMapper(),
+                Ticket::infractionCode,
+                i -> i,
+                ticketsMap::put);
     }
 
     @Override

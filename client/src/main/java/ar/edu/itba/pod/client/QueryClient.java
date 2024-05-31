@@ -99,6 +99,13 @@ public abstract class QueryClient implements Closeable {
 
     }
 
+    protected Function<String, Ticket> getMapper(){
+        return switch (this.city){
+            case CHI -> this::chicagoTicketMapper;
+            case NYC -> this::nyTicketMapper;
+        };
+    }
+
     protected final Ticket nyTicketMapper(String row){
         String[] vals = row.split(CSV_SEPARATOR);
         return new Ticket(

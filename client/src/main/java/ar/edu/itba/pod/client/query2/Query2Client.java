@@ -9,17 +9,19 @@ import com.hazelcast.core.MultiMap;
 
 import java.util.Map;
 
+import static ar.edu.itba.pod.Util.QUERY_2_NAMESPACE;
+
+
 public class Query2Client extends QueryClient {
 
-    private static final String NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q2";
     private final Map<String, Infraction> infractionsMap;
 
     private final MultiMap<String, Ticket> ticketsMap;
 
     public Query2Client(String query) {
         super(query);
-        this.infractionsMap = hazelcast.getMap(NAMESPACE);
-        this.ticketsMap = hazelcast.getMultiMap(NAMESPACE);
+        this.infractionsMap = hazelcast.getMap(QUERY_2_NAMESPACE);
+        this.ticketsMap = hazelcast.getMultiMap(QUERY_2_NAMESPACE);
     }
     private void loadInfractions(){
         loadData(this.infractionPath,
@@ -30,26 +32,11 @@ public class Query2Client extends QueryClient {
     }
 
     private void loadTickets(){
-
-        switch (this.city){
-            case NYC:
-                loadData(this.ticketPath,
-                        this::nyTicketMapper, //TODO: change based on NY or Chicago
-                        Ticket::infractionCode,
-                        i -> i,
-                        ticketsMap::put);
-                break;
-            case CHI:
-                loadData(this.ticketPath,
-                        this:: chicagoTicketMapper, //TODO: change based on NY or Chicago
-                        Ticket::infractionCode,
-                        i -> i,
-                        ticketsMap::put);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid city");
-        }
-
+        loadData(this.ticketPath,
+                getMapper(),
+                Ticket::infractionCode,
+                i -> i,
+                ticketsMap::put);
     }
 
     @Override

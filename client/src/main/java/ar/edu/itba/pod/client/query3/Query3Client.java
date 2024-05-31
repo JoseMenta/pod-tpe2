@@ -12,7 +12,6 @@ import java.util.Map;
 public class Query3Client extends QueryClient {
 
 
-    private static final String NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q3";
     private final Map<String, Infraction> infractionsMap;
 
     private final MultiMap<String, Ticket> ticketsMap;
@@ -21,8 +20,8 @@ public class Query3Client extends QueryClient {
 
     public Query3Client(String query) {
         super(query);
-        this.infractionsMap = hazelcast.getMap(NAMESPACE);
-        this.ticketsMap = hazelcast.getMultiMap(NAMESPACE);
+        this.infractionsMap = hazelcast.getMap(Util.QUERY_3_NAMESPACE);
+        this.ticketsMap = hazelcast.getMultiMap(Util.QUERY_3_NAMESPACE);
         String cant = System.getProperty("n");
         if (cant == null) {
             throw new IllegalArgumentException("Missing n parameter");
@@ -38,26 +37,11 @@ public class Query3Client extends QueryClient {
     }
 
     private void loadTickets( ){
-
-        switch (this.city){
-            case NYC:
-                loadData(this.csvPath,
-                        this::nyTicketMapper, //TODO: change based on NY or Chicago
-                        Ticket::infractionCode,
-                        i -> i,
-                        ticketsMap::put);
-                break;
-            case CHI:
-                loadData(this.csvPath,
-                        this:: chicagoTicketMapper, //TODO: change based on NY or Chicago
-                        Ticket::infractionCode,
-                        i -> i,
-                        ticketsMap::put);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid city");
-        }
-
+        loadData(this.ticketPath,
+                getMapper(),
+                Ticket::infractionCode,
+                i -> i,
+                ticketsMap::put);
     }
 
     @Override

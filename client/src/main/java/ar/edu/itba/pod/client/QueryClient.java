@@ -150,6 +150,7 @@ public abstract class QueryClient implements Closeable {
         }
         try (final Stream<String> lines = Files.lines(Path.of(csvPath)).skip(1).parallel()) {
             lines.forEach(l ->{
+                System.out.println("Adding row");
                 D data = rowMapper.apply(l);
                 V value = valueMapper.apply(data);
                 K key = keyMapper.apply(data); //extract the key from the value, or other data

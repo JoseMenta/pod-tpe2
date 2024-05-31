@@ -4,12 +4,14 @@ import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.DataSerializable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.io.Serializable;
 
 
 @Getter
+@NoArgsConstructor
 public class Pair<V extends Serializable, U extends Serializable> implements DataSerializable {
 
     private V first;

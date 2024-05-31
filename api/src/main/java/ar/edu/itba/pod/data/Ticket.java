@@ -4,6 +4,7 @@ import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.DataSerializable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 //https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Record.html#equals(java.lang.Object)
 
 @Getter
+@NoArgsConstructor
 public class Ticket implements DataSerializable {
 
     private String plate;

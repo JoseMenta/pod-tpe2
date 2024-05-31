@@ -4,15 +4,19 @@ import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.DataSerializable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
+@NoArgsConstructor
 public class Infraction implements DataSerializable {
     private String code;
     private String description;
+
+
     public Infraction(String code, String description){
         this.code = code;
         this.description = description;

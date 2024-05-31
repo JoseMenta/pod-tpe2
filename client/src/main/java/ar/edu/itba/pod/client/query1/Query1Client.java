@@ -1,6 +1,5 @@
 package ar.edu.itba.pod.client.query1;
 
-import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.client.QueryClient;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Ticket;
@@ -51,6 +50,7 @@ public class Query1Client extends QueryClient {
 
     public static void main(String[] args) {
         try(Query1Client client = new Query1Client()){
+
             //Load data
             client.loadInfractions("hola");
             client.loadTickets("chau");

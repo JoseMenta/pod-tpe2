@@ -1,6 +1,8 @@
 package ar.edu.itba.pod.client;
 
 import ar.edu.itba.pod.Util;
+import ar.edu.itba.pod.client.data.Infraction;
+import ar.edu.itba.pod.client.data.Ticket;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -13,16 +15,20 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public abstract class QueryClient implements Closeable {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryClient.class);
 
     private static final String ADDRESSES = "addresses";
+    private static final String ADDRESSES_SEPARATOR = ";";
+    private static final String CSV_SEPARATOR = ";";
+
     private  final HazelcastInstance hazelcast;
 
     public QueryClient(){
@@ -41,18 +47,59 @@ public abstract class QueryClient implements Closeable {
         clientConfig.setGroupConfig(groupConfig);
         // Client Network Config
         ClientNetworkConfig clientNetworkConfig = new ClientNetworkConfig();
-        String[] addresses = System.getProperty(ADDRESSES).split(";");
+        String[] addresses = System.getProperty(ADDRESSES).split(ADDRESSES_SEPARATOR);
         clientNetworkConfig.addAddress(addresses);
         clientConfig.setNetworkConfig(clientNetworkConfig);
         return HazelcastClient.newHazelcastClient(clientConfig);
+
     }
-    private void loadData(final String path, Function<String,>){
+
+    private Ticket nyTicketMapper(String row){
+        String[] vals = row.split(CSV_SEPARATOR);
+        return new Ticket(
+                vals[0],
+                LocalDateTime.parse(vals[1], DateTimeFormatter.ISO_DATE),
+                vals[2],
+                Integer.parseInt(vals[3]),
+                vals[4],
+                vals[5]
+        );
+    }
+
+    private Ticket chicagoTicketMapper(String row){
+        String[] vals = row.split(CSV_SEPARATOR);
+        return new Ticket(
+                vals[1],
+                LocalDateTime.parse(vals[0],DateTimeFormatter.ISO_DATE),
+                vals[2],
+                Integer.parseInt(vals[4]),
+                vals[5],
+                vals[3]
+        );
+    }
+
+    private Infraction infractionMapper(String row){
+        String[] vals = row.split(CSV_SEPARATOR);
+        return new Infraction(
+                vals[0],
+                vals[1]
+        );
+    }
+
+    private <K,V> void loadData(final String csvPath, Map<K,V> map, Function<V,K> keyMapper, Function<String,V> valueMapper){
+        LOGGER.error("Start loading data from {}",csvPath);
         if(this.hazelcast == null){
             throw new IllegalStateException();
         }
-        try (final Stream<String> line = Files.lines(Path.of(path)).skip(1).parallel()) {
-
+        try (final Stream<String> lines = Files.lines(Path.of(csvPath)).skip(1).parallel()) {
+            lines.forEach(l ->{
+                V value = valueMapper.apply(l);
+                K key = keyMapper.apply(value); //extract the key from the value, or other data
+                map.put(key, value);
+            });
+            LOGGER.info("Finished loading data for {}",csvPath);
         } catch (IOException e) {
+            LOGGER.error("Could not open file {} to load data",csvPath);
             throw new RuntimeException(e);
         }
     }

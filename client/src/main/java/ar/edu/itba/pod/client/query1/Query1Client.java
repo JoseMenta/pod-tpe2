@@ -2,6 +2,7 @@ package ar.edu.itba.pod.client.query1;
 
 import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.client.QueryClient;
+import ar.edu.itba.pod.client.utilities.City;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Ticket;
 import com.hazelcast.core.MultiMap;
@@ -18,26 +19,41 @@ public class Query1Client extends QueryClient {
 
     private final MultiMap<String, Ticket> ticketsMap;
 
-    public Query1Client(){
-        super();
+    public Query1Client(String query) {
+        super(query);
         this.infractionsMap = hazelcast.getMap(NAMESPACE);
         this.ticketsMap = hazelcast.getMultiMap(NAMESPACE);
     }
 
-    private void loadInfractions(final String infractionsPath){
-        loadData(infractionsPath,
+    private void loadInfractions(){
+        loadData(this.infractionPath,
                 this::infractionMapper,
                 Infraction::code,
                 i->i,
                 infractionsMap::put);
     }
 
-    private void loadTickets(final String ticketsPath){
-        loadData(ticketsPath,
-                this::nyTicketMapper, //TODO: change based on NY or Chicago
-                Ticket::infractionCode,
-                i -> i,
-                ticketsMap::put);
+    private void loadTickets(){
+
+        switch (this.city){
+            case NYC:
+                loadData(this.ticketPath,
+                        this::nyTicketMapper, //TODO: change based on NY or Chicago
+                        Ticket::infractionCode,
+                        i -> i,
+                        ticketsMap::put);
+                break;
+            case CHI:
+                loadData(this.ticketPath,
+                        this:: chicagoTicketMapper, //TODO: change based on NY or Chicago
+                        Ticket::infractionCode,
+                        i -> i,
+                        ticketsMap::put);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid city");
+        }
+
     }
 
     @Override
@@ -48,10 +64,13 @@ public class Query1Client extends QueryClient {
     }
 
     public static void main(String[] args) {
-        try(Query1Client client = new Query1Client()){
+
+
+        try(Query1Client client = new Query1Client("query1")){
+
             //Load data
-            client.loadInfractions("hola");
-            client.loadTickets("chau");
+            client.loadInfractions();
+            client.loadTickets();
         }
 
 

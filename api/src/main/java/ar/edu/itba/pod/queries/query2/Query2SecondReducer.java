@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 
 public class Query2SecondReducer implements ReducerFactory<String, Pair<String,Integer>, List<String>>, HazelcastInstanceAware {
 
-    private final Comparator<Pair<String,Integer>> COMPARATOR = Comparator.<Pair<String, Integer>, Integer>comparing(Pair::second).reversed();
+    private final Comparator<Pair<String,Integer>> COMPARATOR = Comparator.<Pair<String, Integer>, Integer>comparing(Pair::getSecond).reversed();
 
     private Map<String, Infraction> infractions;
 
@@ -42,10 +42,10 @@ public class Query2SecondReducer implements ReducerFactory<String, Pair<String,I
             @Override
             public List<String> finalizeReduce() {
                 List<String> ans =  values.stream()
-                        .map(Pair::first)
+                        .map(Pair::getFirst)
                         .limit(MAX_ELEMENTS)
                         .map(infractions::get)
-                        .map(Infraction::description)
+                        .map(Infraction::getDescription)
                         .collect(Collectors.toCollection(ArrayList::new));//use custom collector to have mutable list
                 IntStream.range(ans.size(),MAX_ELEMENTS).forEach(i -> ans.add("-"));
                 return ans;

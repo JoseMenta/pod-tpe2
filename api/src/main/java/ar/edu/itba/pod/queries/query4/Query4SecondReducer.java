@@ -24,12 +24,12 @@ public class Query4SecondReducer implements ReducerFactory<String, Pair<String, 
         }
 
         private boolean hasMoreTickets(Integer total) {
-            return mostTickets == null || total > mostTickets.second();
+            return mostTickets == null || total > mostTickets.getSecond();
         }
 
         @Override
         public void reduce(Pair<String, Integer> plateTickets) {
-            if (hasMoreTickets(plateTickets.second())) {
+            if (hasMoreTickets(plateTickets.getSecond())) {
                 this.mostTickets = plateTickets;
             }
         }

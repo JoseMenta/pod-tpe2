@@ -31,7 +31,7 @@ public class Query3Client extends QueryClient {
     private void loadInfractions(){
         loadData(this.infractionPath,
                 this::infractionMapper,
-                Infraction::code,
+                Infraction::getCode,
                 i->i,
                 infractionsMap::put);
     }
@@ -39,7 +39,7 @@ public class Query3Client extends QueryClient {
     private void loadTickets( ){
         loadData(this.ticketPath,
                 getMapper(),
-                Ticket::infractionCode,
+                Ticket::getInfractionCode,
                 i -> i,
                 ticketsMap::put);
     }

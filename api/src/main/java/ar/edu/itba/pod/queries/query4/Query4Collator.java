@@ -21,7 +21,7 @@ public class Query4Collator implements Collator<Map.Entry<String, Pair<String, I
     @Override
     public SortedSet<Query4Result> collate(Iterable<Map.Entry<String, Pair<String, Integer>>> values) {
         return StreamSupport.stream(values.spliterator(), false)
-                .map(e -> new Query4Result(e.getKey(), e.getValue().first(), e.getValue().second()))
+                .map(e -> new Query4Result(e.getKey(), e.getValue().getFirst(), e.getValue().getSecond()))
                 .collect(Collectors.toCollection(() -> new TreeSet<>(COMPARATOR)));
     }
 }

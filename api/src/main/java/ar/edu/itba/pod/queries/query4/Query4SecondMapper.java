@@ -12,8 +12,8 @@ public class Query4SecondMapper implements Mapper<Pair<String, String>, Integer,
      */
     @Override
     public void map(Pair<String, String> pairIn, Integer total, Context<String, Pair<String, Integer>> context) {
-        final String neighbourhood = pairIn.first();
-        final String plate = pairIn.second();
+        final String neighbourhood = pairIn.getFirst();
+        final String plate = pairIn.getSecond();
         context.emit(neighbourhood, new Pair<>(plate, total));
     }
 }

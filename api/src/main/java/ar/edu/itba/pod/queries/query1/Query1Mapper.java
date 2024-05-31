@@ -8,6 +8,6 @@ public class Query1Mapper implements Mapper<String, Ticket, String, Integer> {
 
     @Override
     public void map(String s, Ticket ticket, Context<String, Integer> context) {
-        context.emit(ticket.infractionCode(),1);
+        context.emit(ticket.getInfractionCode(),1);
     }
 }

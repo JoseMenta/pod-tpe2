@@ -8,6 +8,6 @@ import com.hazelcast.mapreduce.Mapper;
 public class Query5FirstMapper  implements Mapper<String, Ticket, String, Pair<Integer, Integer>> {
     @Override
     public void map(String s, Ticket ticket, Context<String, Pair<Integer, Integer>> context) {
-        context.emit(ticket.infractionCode(), new Pair<>(ticket.fineAmount(), 1));
+        context.emit(ticket.getInfractionCode(), new Pair<>(ticket.getFineAmount(), 1));
     }
 }

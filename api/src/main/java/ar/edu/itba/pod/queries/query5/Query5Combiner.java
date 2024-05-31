@@ -27,8 +27,8 @@ public class Query5Combiner implements CombinerFactory<String,Pair<Integer, Inte
 
             @Override
             public void combine(Pair<Integer, Integer> pair) {
-                this.sum+=pair.first();
-                this.count+=pair.second();
+                this.sum+=pair.getFirst();
+                this.count+=pair.getSecond();
             }
 
             @Override

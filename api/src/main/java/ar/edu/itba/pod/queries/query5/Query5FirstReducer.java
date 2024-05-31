@@ -19,8 +19,8 @@ public class Query5FirstReducer  implements ReducerFactory<String, Pair<Integer,
 
             @Override
             public void reduce(Pair<Integer, Integer> pair) {
-                this.sum+= pair.first();
-                this.count+= pair.second();
+                this.sum+= pair.getFirst();
+                this.count+= pair.getSecond();
             }
 
             @Override

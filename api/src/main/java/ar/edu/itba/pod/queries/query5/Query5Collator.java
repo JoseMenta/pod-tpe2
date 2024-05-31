@@ -10,8 +10,8 @@ import java.util.stream.StreamSupport;
 
 public class Query5Collator implements Collator<Map.Entry<Integer, List<Pair<String, String>>>, SortedSet<Query5Result>> {
 
-    private static final  Comparator<Pair<String,String>> PAIR_COMPARATOR = Comparator.<Pair<String,String>,String>comparing(Pair::first)
-            .thenComparing(Pair::second);
+    private static final  Comparator<Pair<String,String>> PAIR_COMPARATOR = Comparator.<Pair<String,String>,String>comparing(Pair::getFirst)
+            .thenComparing(Pair::getSecond);
 
     private static final Comparator<Query5Result> COMPARATOR = Comparator.comparing(Query5Result::group).reversed()
             .thenComparing(Query5Result::tuple,PAIR_COMPARATOR);

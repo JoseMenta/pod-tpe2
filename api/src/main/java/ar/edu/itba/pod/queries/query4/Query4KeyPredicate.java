@@ -17,7 +17,7 @@ public class Query4KeyPredicate implements KeyPredicate<LocalDateTime> {
     }
 
     public static boolean isDateTimeInRange(Pair<LocalDateTime, LocalDateTime> dateTimeRange, LocalDateTime dateTime) {
-        return !dateTime.isBefore(dateTimeRange.first()) && !dateTime.isAfter(dateTimeRange.second());
+        return !dateTime.isBefore(dateTimeRange.getFirst()) && !dateTime.isAfter(dateTimeRange.getSecond());
     }
 
     /**

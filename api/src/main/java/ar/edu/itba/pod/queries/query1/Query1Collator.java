@@ -33,7 +33,7 @@ public class Query1Collator implements Collator<Map.Entry<String,Integer>, Sorte
     @Override
     public SortedSet<Query1Result> collate(Iterable<Map.Entry<String, Integer>> values) {
         return StreamSupport.stream(values.spliterator(),false)
-                .map(e->new Query1Result(infractions.get(e.getKey()).description(),e.getValue()))
+                .map(e->new Query1Result(infractions.get(e.getKey()).getDescription(),e.getValue()))
                 .collect(Collectors.toCollection(()->new TreeSet<>(COMPARATOR)));
 //        SortedSet<Query1Result> results = new TreeSet<>(COMPARATOR);
 //        for(Map.Entry<String, Integer> entry : values) {

@@ -19,6 +19,7 @@
     <mockito.version>4.11.0</mockito.version>
     <junit5.version>5.9.1</junit5.version>
     <hazelcast.version>3.8.6</hazelcast.version>
+    <org.projectlombok.version>1.18.32</org.projectlombok.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -46,6 +47,13 @@
         <version>${junit5.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <!-- LOMBOK     -->
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${org.projectlombok.version}</version>
+        <scope>provided</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

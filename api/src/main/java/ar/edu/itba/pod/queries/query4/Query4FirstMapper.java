@@ -22,8 +22,8 @@ public class Query4FirstMapper implements Mapper<LocalDateTime, Ticket, Pair<Str
     }
 
     private static String validateRange(final Pair<LocalDateTime, LocalDateTime> dateTimeRange) {
-        final LocalDateTime start = dateTimeRange.first();
-        final LocalDateTime end = dateTimeRange.second();
+        final LocalDateTime start = dateTimeRange.getFirst();
+        final LocalDateTime end = dateTimeRange.getSecond();
         if (start == null) {
             return "Start time is null";
         }
@@ -38,8 +38,8 @@ public class Query4FirstMapper implements Mapper<LocalDateTime, Ticket, Pair<Str
 
     private Pair<String, String> getKey(final Ticket ticket) {
         return new Pair<>(
-                ticket.neighbourhood(),
-                ticket.plate()
+                ticket.getNeighbourhood(),
+                ticket.getPlate()
         );
     }
 

@@ -19,8 +19,8 @@ public class Query4Client extends QueryClient {
 
     private final MultiMap<String, Ticket> ticketsMap;
 
-    private final LocalDate from;
-    private final LocalDate to;
+    private final LocalDateTime from;
+    private final LocalDateTime to;
 
     public Query4Client(String query) {
         super(query);
@@ -32,8 +32,8 @@ public class Query4Client extends QueryClient {
             throw new IllegalArgumentException("Missing from or to parameter");
         }
 
-        this.from = LocalDate.parse(fromString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        this.to = LocalDate.parse(toString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        this.from = LocalDate.parse(fromString, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
+        this.to = LocalDate.parse(toString, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
     }
     private void loadInfractions(){
         loadData(this.infractionPath,

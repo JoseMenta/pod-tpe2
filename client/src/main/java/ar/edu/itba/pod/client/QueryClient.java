@@ -1,8 +1,8 @@
 package ar.edu.itba.pod.client;
 
 import ar.edu.itba.pod.Util;
-import ar.edu.itba.pod.client.data.Infraction;
-import ar.edu.itba.pod.client.data.Ticket;
+import ar.edu.itba.pod.data.Infraction;
+import ar.edu.itba.pod.data.Ticket;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;

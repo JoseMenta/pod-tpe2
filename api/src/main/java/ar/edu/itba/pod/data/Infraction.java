@@ -1,4 +1,4 @@
-package ar.edu.itba.pod.client.data;
+package ar.edu.itba.pod.data;
 
 public record Infraction(
     String code,

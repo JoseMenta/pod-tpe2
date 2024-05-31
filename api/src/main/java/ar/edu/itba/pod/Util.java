@@ -9,5 +9,7 @@ public class Util {
     // https://docs.hazelcast.org/docs/3.8.6/manual/html-single/index.html#interfaces
     public static final String HAZELCAST_NETWORK_MASK = "10.103.1.*";
 
+    public static final String QUERY_1_NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q1";
+
 
 }

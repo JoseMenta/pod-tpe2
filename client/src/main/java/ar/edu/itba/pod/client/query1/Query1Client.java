@@ -9,9 +9,11 @@ import com.hazelcast.core.MultiMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static ar.edu.itba.pod.Util.QUERY_1_NAMESPACE;
+
 public class Query1Client extends QueryClient {
 
-    private static final String NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q1";
+
 
     //TODO: ver si no es mejor guardar directo <String, String>, lo hago asi por ahora (debería cambiarse el keyMapper)
     private final Map<String, Infraction> infractionsMap;
@@ -20,8 +22,8 @@ public class Query1Client extends QueryClient {
 
     public Query1Client(){
         super();
-        this.infractionsMap = hazelcast.getMap(NAMESPACE);
-        this.ticketsMap = hazelcast.getMultiMap(NAMESPACE);
+        this.infractionsMap = hazelcast.getMap(QUERY_1_NAMESPACE);
+        this.ticketsMap = hazelcast.getMultiMap(QUERY_1_NAMESPACE);
     }
 
     private void loadInfractions(final String infractionsPath){
@@ -52,10 +54,8 @@ public class Query1Client extends QueryClient {
             //Load data
             client.loadInfractions("hola");
             client.loadTickets("chau");
+
         }
-
-
-
     }
 
 

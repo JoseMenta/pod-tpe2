@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -87,7 +86,7 @@ public abstract class QueryClient implements Closeable {
         );
     }
 
-    protected final <K,V,D> void loadData(final String csvPath,
+    protected final <D,K,V> void loadData(final String csvPath,
                                           Function<String,D> rowMapper,
                                           Function<D,K> keyMapper,
                                           Function<D,V> valueMapper,

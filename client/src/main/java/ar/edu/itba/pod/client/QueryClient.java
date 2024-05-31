@@ -30,7 +30,7 @@ public abstract class QueryClient implements Closeable {
     private static final String ADDRESSES_SEPARATOR = ";";
     private static final String CSV_SEPARATOR = ";";
 
-    private  final HazelcastInstance hazelcast;
+    protected final HazelcastInstance hazelcast;
 
     public QueryClient(){
         LOGGER.info("Starting Hazelcast client...");
@@ -55,7 +55,7 @@ public abstract class QueryClient implements Closeable {
 
     }
 
-    private Ticket nyTicketMapper(String row){
+    protected final Ticket nyTicketMapper(String row){
         String[] vals = row.split(CSV_SEPARATOR);
         return new Ticket(
                 vals[0],
@@ -67,7 +67,7 @@ public abstract class QueryClient implements Closeable {
         );
     }
 
-    private Ticket chicagoTicketMapper(String row){
+    protected final Ticket chicagoTicketMapper(String row){
         String[] vals = row.split(CSV_SEPARATOR);
         return new Ticket(
                 vals[1],
@@ -79,7 +79,7 @@ public abstract class QueryClient implements Closeable {
         );
     }
 
-    private Infraction infractionMapper(String row){
+    protected final Infraction infractionMapper(String row){
         String[] vals = row.split(CSV_SEPARATOR);
         return new Infraction(
                 vals[0],
@@ -87,15 +87,20 @@ public abstract class QueryClient implements Closeable {
         );
     }
 
-    private <K,V> void loadData(final String csvPath, BiConsumer<K,V> consumer, Function<V,K> keyMapper, Function<String,V> valueMapper){
+    protected final <K,V,D> void loadData(final String csvPath,
+                                          Function<String,D> rowMapper,
+                                          Function<D,K> keyMapper,
+                                          Function<D,V> valueMapper,
+                                          BiConsumer<K,V> consumer){
         LOGGER.error("Start loading data from {}",csvPath);
         if(this.hazelcast == null){
             throw new IllegalStateException();
         }
         try (final Stream<String> lines = Files.lines(Path.of(csvPath)).skip(1).parallel()) {
             lines.forEach(l ->{
-                V value = valueMapper.apply(l);
-                K key = keyMapper.apply(value); //extract the key from the value, or other data
+                D data = rowMapper.apply(l);
+                V value = valueMapper.apply(data);
+                K key = keyMapper.apply(data); //extract the key from the value, or other data
                 consumer.accept(key,value);
             });
             LOGGER.info("Finished loading data for {}",csvPath);

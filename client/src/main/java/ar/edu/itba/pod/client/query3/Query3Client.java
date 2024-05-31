@@ -5,9 +5,20 @@ import ar.edu.itba.pod.client.QueryClient;
 import ar.edu.itba.pod.client.utilities.City;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Ticket;
+import ar.edu.itba.pod.data.results.Query1Result;
+import ar.edu.itba.pod.data.results.Query3Result;
+import ar.edu.itba.pod.queries.query3.Query3Collator;
+import ar.edu.itba.pod.queries.query3.Query3Combiner;
+import ar.edu.itba.pod.queries.query3.Query3Mapper;
+import ar.edu.itba.pod.queries.query3.Query3Reducer;
 import com.hazelcast.core.MultiMap;
+import com.hazelcast.mapreduce.Job;
+import com.hazelcast.mapreduce.JobTracker;
+import com.hazelcast.mapreduce.KeyValueSource;
 
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.concurrent.ExecutionException;
 
 public class Query3Client extends QueryClient {
 
@@ -44,6 +55,19 @@ public class Query3Client extends QueryClient {
                 ticketsMap::put);
     }
 
+    public SortedSet<Query3Result> executeJob() throws ExecutionException, InterruptedException {
+        final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
+        final KeyValueSource<String,Ticket> source = KeyValueSource.fromMultiMap(ticketsMap);
+        final Job<String, Ticket> job = tracker.newJob(source);
+
+        return job
+                .mapper(new Query3Mapper())
+                .combiner(new Query3Combiner())
+                .reducer(new Query3Reducer())
+                .submit(new Query3Collator())
+                .get();
+    }
+
     @Override
     public void close() {
         super.close();
@@ -56,6 +80,17 @@ public class Query3Client extends QueryClient {
             //Load data
             client.loadInfractions();
             client.loadTickets();
+
+            System.out.println("Started");
+            //Execute job
+            SortedSet<Query3Result> ans = client.executeJob();
+            System.out.println("Ended");
+
+            ans.forEach(System.out::println);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
 

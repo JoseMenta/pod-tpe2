@@ -5,9 +5,15 @@ import ar.edu.itba.pod.client.QueryClient;
 import ar.edu.itba.pod.client.utilities.City;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Ticket;
+import ar.edu.itba.pod.data.results.Query2Result;
+import ar.edu.itba.pod.queries.query2.Query2FirstMapper;
 import com.hazelcast.core.MultiMap;
+import com.hazelcast.mapreduce.Job;
+import com.hazelcast.mapreduce.JobTracker;
+import com.hazelcast.mapreduce.KeyValueSource;
 
 import java.util.Map;
+import java.util.SortedSet;
 
 import static ar.edu.itba.pod.Util.QUERY_2_NAMESPACE;
 
@@ -38,6 +44,16 @@ public class Query2Client extends QueryClient {
                 i -> i,
                 ticketsMap::put);
     }
+
+//    public SortedSet<Query2Result> executeJob(){
+//        final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
+//        final KeyValueSource<String,Ticket> source = KeyValueSource.fromMultiMap(ticketsMap);
+//        final Job<String, Ticket> job = tracker.newJob(source);
+//
+//        Map<> job
+//                .mapper(new Query2FirstMapper())
+//                .red
+//    }
 
     @Override
     public void close() {

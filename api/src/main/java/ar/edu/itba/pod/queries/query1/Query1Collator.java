@@ -1,6 +1,7 @@
 package ar.edu.itba.pod.queries.query1;
 
 //TODO: revisar si puede ir sólo en el cliente
+//Se hace sólo en el cliente, por eso no tienen que ser serializable los datos
 
 import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.data.Infraction;
@@ -25,8 +26,12 @@ public class Query1Collator implements Collator<Map.Entry<String,Integer>, Sorte
             .reversed()
             .thenComparing(Query1Result::infraction);
 
+    public Query1Collator(Map<String, Infraction> infractions) {
+        this.infractions = infractions;
+    }
+
     @Override
-    public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
+    public void setHazelcastInstance(HazelcastInstance hazelcastInstance) { //No funciona
         this.infractions = hazelcastInstance.getMap(Util.QUERY_1_NAMESPACE);
     }
 

@@ -69,7 +69,7 @@ public class Query1Client extends QueryClient {
                 .mapper(new Query1Mapper())
                 .combiner(new Query1Combiner())
                 .reducer(new Query1Reducer())
-                .submit(new Query1Collator())
+                .submit(new Query1Collator(infractionsMap))
                 .get();
     }
 

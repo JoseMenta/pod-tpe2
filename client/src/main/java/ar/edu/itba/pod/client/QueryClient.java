@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -86,7 +87,7 @@ public abstract class QueryClient implements Closeable {
         );
     }
 
-    private <K,V> void loadData(final String csvPath, Map<K,V> map, Function<V,K> keyMapper, Function<String,V> valueMapper){
+    private <K,V> void loadData(final String csvPath, BiConsumer<K,V> consumer, Function<V,K> keyMapper, Function<String,V> valueMapper){
         LOGGER.error("Start loading data from {}",csvPath);
         if(this.hazelcast == null){
             throw new IllegalStateException();
@@ -95,7 +96,7 @@ public abstract class QueryClient implements Closeable {
             lines.forEach(l ->{
                 V value = valueMapper.apply(l);
                 K key = keyMapper.apply(value); //extract the key from the value, or other data
-                map.put(key, value);
+                consumer.accept(key,value);
             });
             LOGGER.info("Finished loading data for {}",csvPath);
         } catch (IOException e) {

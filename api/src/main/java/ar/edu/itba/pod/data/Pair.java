@@ -49,4 +49,12 @@ public class Pair<V extends Serializable, U extends Serializable> implements Dat
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Pair{" +
+                "first=" + first +
+                ", second=" + second +
+                '}';
+    }
 }

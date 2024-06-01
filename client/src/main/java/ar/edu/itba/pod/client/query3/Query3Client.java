@@ -17,6 +17,7 @@ import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.concurrent.ExecutionException;
 
@@ -70,6 +71,8 @@ public class Query3Client extends QueryClient {
 
     @Override
     public void close() {
+        Optional.ofNullable(infractionsMap).ifPresent(Map::clear);
+        Optional.ofNullable(ticketsMap).ifPresent(MultiMap::clear);
         super.close();
     }
 

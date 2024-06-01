@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Objects;
 
 
 @Getter
@@ -32,5 +33,20 @@ public class Pair<V extends Serializable, U extends Serializable> implements Dat
     public void readData(ObjectDataInput in) throws IOException {
         first = (V) in.readObject();
         second = (U) in.readObject();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first,second);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if(o instanceof Pair<?,?> other){
+            return Objects.equals(first, other.first) && Objects.equals(second, other.second);
+        }
+        return false;
     }
 }

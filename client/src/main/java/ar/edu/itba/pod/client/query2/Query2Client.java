@@ -4,18 +4,24 @@ import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.client.QueryClient;
 import ar.edu.itba.pod.client.utilities.City;
 import ar.edu.itba.pod.data.Infraction;
+import ar.edu.itba.pod.data.Pair;
 import ar.edu.itba.pod.data.Ticket;
+import ar.edu.itba.pod.data.results.Query1Result;
 import ar.edu.itba.pod.data.results.Query2Result;
-import ar.edu.itba.pod.queries.query2.Query2FirstMapper;
+import ar.edu.itba.pod.queries.query2.*;
+import com.hazelcast.core.IMap;
 import com.hazelcast.core.MultiMap;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedSet;
+import java.util.concurrent.ExecutionException;
 
 import static ar.edu.itba.pod.Util.QUERY_2_NAMESPACE;
+import static ar.edu.itba.pod.Util.QUERY_4_NAMESPACE;
 
 
 public class Query2Client extends QueryClient {
@@ -24,10 +30,13 @@ public class Query2Client extends QueryClient {
 
     private final MultiMap<String, Ticket> ticketsMap;
 
+    private final IMap<Pair<String,String>,Integer> auxMap;
+
     public Query2Client(String query) {
         super(query);
         this.infractionsMap = hazelcast.getMap(QUERY_2_NAMESPACE);
         this.ticketsMap = hazelcast.getMultiMap(QUERY_2_NAMESPACE);
+        this.auxMap = hazelcast.getMap(QUERY_2_NAMESPACE + "-aux");
     }
     private void loadInfractions(){
         loadData(this.infractionPath,
@@ -45,18 +54,33 @@ public class Query2Client extends QueryClient {
                 ticketsMap::put);
     }
 
-//    public SortedSet<Query2Result> executeJob(){
-//        final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
-//        final KeyValueSource<String,Ticket> source = KeyValueSource.fromMultiMap(ticketsMap);
-//        final Job<String, Ticket> job = tracker.newJob(source);
-//
-//        Map<> job
-//                .mapper(new Query2FirstMapper())
-//                .red
-//    }
+    public SortedSet<Query2Result> executeJob() throws ExecutionException, InterruptedException {
+        final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
+        final KeyValueSource<String,Ticket> source = KeyValueSource.fromMultiMap(ticketsMap);
+        final Job<String, Ticket> job = tracker.newJob(source);
+
+        Map<Pair<String,String>,Integer> aux = job
+                .mapper(new Query2FirstMapper())
+                .reducer(new Query2FirstReducer())
+                .submit()
+                .get();
+
+        auxMap.putAll(aux);
+        final KeyValueSource<Pair<String,String>,Integer> secondSource = KeyValueSource.fromMap(auxMap);
+        final Job<Pair<String,String>,Integer>  jobSecond = tracker.newJob(secondSource);
+
+        return jobSecond
+                .mapper(new Query2SecondMapper())
+                .reducer(new Query2SecondReducer())
+                .submit(new Query2Collator())
+                .get();
+    }
 
     @Override
     public void close() {
+        Optional.ofNullable(infractionsMap).ifPresent(Map::clear);
+        Optional.ofNullable(ticketsMap).ifPresent(MultiMap::clear);
+        Optional.ofNullable(auxMap).ifPresent(Map::clear);
         super.close();
     }
 
@@ -67,6 +91,19 @@ public class Query2Client extends QueryClient {
             //Load data
             client.loadInfractions();
             client.loadTickets();
+
+            System.out.println("Started");
+            //Execute job
+            SortedSet<Query2Result> ans = client.executeJob();
+            System.out.println("Ended");
+
+
+            //Print results
+            ans.forEach(System.out::println);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
 

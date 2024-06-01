@@ -14,15 +14,15 @@ import java.util.stream.IntStream;
 
 public class Query2SecondReducer implements ReducerFactory<String, Pair<String,Integer>, List<String>>, HazelcastInstanceAware {
 
-    private final Comparator<Pair<String,Integer>> COMPARATOR = Comparator.<Pair<String, Integer>, Integer>comparing(Pair::getSecond).reversed();
-
     private Map<String, Infraction> infractions;
-
-    private static final int MAX_ELEMENTS = 3;
 
     @Override
     public Reducer<Pair<String, Integer>, List<String>> newReducer(String s) {
         return new Reducer<Pair<String, Integer>, List<String>>() {
+
+            private final Comparator<Pair<String,Integer>> COMPARATOR = Comparator.<Pair<String, Integer>, Integer>comparing(Pair::getSecond).reversed();
+
+            private static final int MAX_ELEMENTS = 3;
 
             SortedSet<Pair<String,Integer>> values;
 

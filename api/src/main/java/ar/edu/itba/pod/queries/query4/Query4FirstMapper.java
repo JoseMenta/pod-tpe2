@@ -11,7 +11,7 @@ public class Query4FirstMapper implements Mapper<LocalDateTime, Ticket, Pair<Str
 
     // Defines the time range of tickets to consider
     // Should be null if Query4KeyPredicate is used
-    private final Pair<LocalDateTime, LocalDateTime> dateTimeRange;
+    private transient final Pair<LocalDateTime, LocalDateTime> dateTimeRange;
 
     public Query4FirstMapper(final Pair<LocalDateTime, LocalDateTime> dateTimeRange) {
         final String error = validateRange(dateTimeRange);

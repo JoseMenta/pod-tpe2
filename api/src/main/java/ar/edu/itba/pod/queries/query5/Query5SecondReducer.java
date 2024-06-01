@@ -12,7 +12,7 @@ public class Query5SecondReducer implements ReducerFactory<Integer, String, List
     public Reducer<String, List<Pair<String, String>>> newReducer(Integer i) {
         return new Reducer<String, List<Pair<String, String>>>() {
 
-            List<String> infractionCodes;
+            private List<String> infractionCodes;
 
             @Override
             public void beginReduce() {

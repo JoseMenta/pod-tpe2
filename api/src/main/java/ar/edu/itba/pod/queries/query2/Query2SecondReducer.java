@@ -14,23 +14,27 @@ import java.util.stream.IntStream;
 
 public class Query2SecondReducer implements ReducerFactory<String, Pair<String,Integer>, List<String>>, HazelcastInstanceAware {
 
-    transient private Map<String, Infraction> infractions;
+    private transient Map<String, Infraction> infractions;
 
     @Override
     public Reducer<Pair<String, Integer>, List<String>> newReducer(String s) {
         return new Reducer<Pair<String, Integer>, List<String>>() {
 
-            private transient SortedSet<Pair<String,Integer>> values;
+            private static final Comparator<Pair<String,Integer>> COMPARATOR = Comparator.<Pair<String, Integer>, Integer>comparing(Pair::getSecond).reversed();
+
+            private static final int MAX_ELEMENTS = 3;
+
+            private SortedSet<Pair<String,Integer>> values;
 
             @Override
             public void beginReduce() {
-                this.values = new TreeSet<>(Comparator.<Pair<String, Integer>, Integer>comparing(Pair::getSecond).reversed());
+                this.values = new TreeSet<>(COMPARATOR);
             }
 
             @Override
             public void reduce(Pair<String, Integer> value) {
                 values.add(value);
-                if (values.size()>=3+1){
+                if (values.size()>=MAX_ELEMENTS+1){
                     values.remove(values.last());
                 }
             }
@@ -39,11 +43,11 @@ public class Query2SecondReducer implements ReducerFactory<String, Pair<String,I
             public List<String> finalizeReduce() {
                 List<String> ans =  values.stream()
                         .map(Pair::getFirst)
-                        .limit(3)
+                        .limit(MAX_ELEMENTS)
                         .map(infractions::get)
                         .map(Infraction::getDescription)
                         .collect(Collectors.toCollection(ArrayList::new));//use custom collector to have mutable list
-                IntStream.range(ans.size(),3).forEach(i -> ans.add("-"));
+                IntStream.range(ans.size(),MAX_ELEMENTS).forEach(i -> ans.add("-"));
                 return ans;
             }
         };

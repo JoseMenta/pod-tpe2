@@ -20,21 +20,17 @@ public class Query2SecondReducer implements ReducerFactory<String, Pair<String,I
     public Reducer<Pair<String, Integer>, List<String>> newReducer(String s) {
         return new Reducer<Pair<String, Integer>, List<String>>() {
 
-            private final Comparator<Pair<String,Integer>> COMPARATOR = Comparator.<Pair<String, Integer>, Integer>comparing(Pair::getSecond).reversed();
-
-            private static final int MAX_ELEMENTS = 3;
-
             SortedSet<Pair<String,Integer>> values;
 
             @Override
             public void beginReduce() {
-                this.values = new TreeSet<>(COMPARATOR);
+                this.values = new TreeSet<>(Comparator.<Pair<String, Integer>, Integer>comparing(Pair::getSecond).reversed());
             }
 
             @Override
             public void reduce(Pair<String, Integer> value) {
                 values.add(value);
-                if (values.size()>=MAX_ELEMENTS+1){
+                if (values.size()>=3+1){
                     values.removeLast();
                 }
             }
@@ -43,11 +39,11 @@ public class Query2SecondReducer implements ReducerFactory<String, Pair<String,I
             public List<String> finalizeReduce() {
                 List<String> ans =  values.stream()
                         .map(Pair::getFirst)
-                        .limit(MAX_ELEMENTS)
+                        .limit(3)
                         .map(infractions::get)
                         .map(Infraction::getDescription)
                         .collect(Collectors.toCollection(ArrayList::new));//use custom collector to have mutable list
-                IntStream.range(ans.size(),MAX_ELEMENTS).forEach(i -> ans.add("-"));
+                IntStream.range(ans.size(),3).forEach(i -> ans.add("-"));
                 return ans;
             }
         };

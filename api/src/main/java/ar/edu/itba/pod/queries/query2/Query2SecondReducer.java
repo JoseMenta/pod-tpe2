@@ -20,7 +20,9 @@ public class Query2SecondReducer implements ReducerFactory<String, Pair<String,I
     public Reducer<Pair<String, Integer>, List<String>> newReducer(String s) {
         return new Reducer<Pair<String, Integer>, List<String>>() {
 
-            private static final Comparator<Pair<String,Integer>> COMPARATOR = Comparator.<Pair<String, Integer>, Integer>comparing(Pair::getSecond).reversed();
+            private static final Comparator<Pair<String,Integer>> COMPARATOR = Comparator.<Pair<String, Integer>, Integer>comparing(Pair::getSecond)
+                        .thenComparing(Pair::getFirst)
+                        .reversed();
 
             private static final int MAX_ELEMENTS = 3;
 

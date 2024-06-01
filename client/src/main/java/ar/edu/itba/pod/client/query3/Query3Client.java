@@ -65,7 +65,7 @@ public class Query3Client extends QueryClient {
                 .mapper(new Query3Mapper())
                 .combiner(new Query3Combiner())
                 .reducer(new Query3Reducer())
-                .submit(new Query3Collator())
+                .submit(new Query3Collator(cant))
                 .get();
     }
 

@@ -20,7 +20,7 @@ public class Query2SecondReducer implements ReducerFactory<String, Pair<String,I
     public Reducer<Pair<String, Integer>, List<String>> newReducer(String s) {
         return new Reducer<Pair<String, Integer>, List<String>>() {
 
-            SortedSet<Pair<String,Integer>> values;
+            private transient SortedSet<Pair<String,Integer>> values;
 
             @Override
             public void beginReduce() {
@@ -31,7 +31,7 @@ public class Query2SecondReducer implements ReducerFactory<String, Pair<String,I
             public void reduce(Pair<String, Integer> value) {
                 values.add(value);
                 if (values.size()>=3+1){
-                    values.removeLast();
+                    values.remove(values.last());
                 }
             }
 

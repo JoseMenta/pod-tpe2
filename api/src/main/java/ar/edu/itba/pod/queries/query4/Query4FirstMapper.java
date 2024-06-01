@@ -13,8 +13,8 @@ public class Query4FirstMapper implements Mapper<LocalDateTime, Ticket, Pair<Str
     // Should be null if Query4KeyPredicate is used
 //    private transient final Pair<LocalDateTime, LocalDateTime> dateTimeRange;
 
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private final LocalDateTime start;
+    private final LocalDateTime end;
 
     public Query4FirstMapper(final Pair<LocalDateTime, LocalDateTime> dateTimeRange) {
         final String error = validateRange(dateTimeRange);

@@ -9,9 +9,9 @@ public class Query4KeyPredicate implements KeyPredicate<LocalDateTime> {
 
 //    private final Pair<LocalDateTime, LocalDateTime> dateTimeRange;
 
-    private LocalDateTime start;
+    private final LocalDateTime start;
 
-    private LocalDateTime end;
+    private final LocalDateTime end;
 
     public Query4KeyPredicate(Pair<LocalDateTime, LocalDateTime> dateTimeRange) {
         if (dateTimeRange == null) {

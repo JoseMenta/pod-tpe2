@@ -12,7 +12,7 @@ import java.util.*;
 
 public class Query5SecondReducer implements ReducerFactory<Integer, String, List<Pair<String, String>>>, HazelcastInstanceAware {
 
-    transient Map<String, Infraction> infractions;
+    private transient Map<String, Infraction> infractions;
 
 
 

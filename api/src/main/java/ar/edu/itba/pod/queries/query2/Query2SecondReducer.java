@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 
 public class Query2SecondReducer implements ReducerFactory<String, Pair<String,Integer>, List<String>>, HazelcastInstanceAware {
 
-    private Map<String, Infraction> infractions;
+    transient private Map<String, Infraction> infractions;
 
     @Override
     public Reducer<Pair<String, Integer>, List<String>> newReducer(String s) {

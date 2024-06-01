@@ -11,14 +11,18 @@ public class Query4FirstMapper implements Mapper<LocalDateTime, Ticket, Pair<Str
 
     // Defines the time range of tickets to consider
     // Should be null if Query4KeyPredicate is used
-    private transient final Pair<LocalDateTime, LocalDateTime> dateTimeRange;
+//    private transient final Pair<LocalDateTime, LocalDateTime> dateTimeRange;
+
+    private LocalDateTime start;
+    private LocalDateTime end;
 
     public Query4FirstMapper(final Pair<LocalDateTime, LocalDateTime> dateTimeRange) {
         final String error = validateRange(dateTimeRange);
         if (error != null) {
             throw new IllegalArgumentException(error);
         }
-        this.dateTimeRange = dateTimeRange;
+        this.start = dateTimeRange.getFirst();
+        this.end = dateTimeRange.getSecond();
     }
 
     private static String validateRange(final Pair<LocalDateTime, LocalDateTime> dateTimeRange) {
@@ -49,7 +53,7 @@ public class Query4FirstMapper implements Mapper<LocalDateTime, Ticket, Pair<Str
      */
     @Override
     public void map(LocalDateTime dateTime, Ticket ticket, Context<Pair<String, String>, Integer> context) {
-        if (dateTimeRange == null || Query4KeyPredicate.isDateTimeInRange(dateTimeRange, dateTime)) {
+        if (Query4KeyPredicate.isDateTimeInRange(start, end, dateTime)) {
             context.emit(getKey(ticket), 1);
         }
     }

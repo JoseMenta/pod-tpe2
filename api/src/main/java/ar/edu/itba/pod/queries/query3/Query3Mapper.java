@@ -8,7 +8,7 @@ public class Query3Mapper implements Mapper<String, Ticket, String, Integer> {
 
     @Override
     public void map(String s, Ticket ticket, Context<String, Integer> context) {
-        context.emit(ticket.getInfractionCode(), ticket.getFineAmount());
+        context.emit(ticket.getAgency(), ticket.getFineAmount());
     }
 
 }

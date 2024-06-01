@@ -30,7 +30,7 @@ public class Query3Collator implements Collator<Map.Entry<String,Integer>, Sorte
                 .reduce(Integer::sum).orElseThrow(IllegalStateException::new);
 
         for(Map.Entry<String, Integer> entry : values) {
-            results.add(new Query3Result(entry.getKey(), (entry.getValue()/total)*100D));
+            results.add(new Query3Result(entry.getKey(), ((entry.getValue()*100D)/total)));
         }
         return results.stream().limit(n).collect(Collectors.toCollection(()->new TreeSet<>(COMPARATOR)));
     }

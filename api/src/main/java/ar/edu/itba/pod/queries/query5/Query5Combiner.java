@@ -4,13 +4,13 @@ import ar.edu.itba.pod.data.Pair;
 import com.hazelcast.mapreduce.Combiner;
 import com.hazelcast.mapreduce.CombinerFactory;
 
-public class Query5Combiner implements CombinerFactory<String,Pair<Integer, Integer>,Pair<Integer, Integer>> {
+public class Query5Combiner implements CombinerFactory<String,Pair<Double, Integer>,Pair<Double, Integer>> {
 
     @Override
-    public Combiner<Pair<Integer, Integer>, Pair<Integer, Integer>> newCombiner(String s) {
-        return new Combiner<Pair<Integer, Integer>, Pair<Integer, Integer>>() {
+    public Combiner<Pair<Double, Integer>, Pair<Double, Integer>> newCombiner(String s) {
+        return new Combiner<Pair<Double, Integer>, Pair<Double, Integer>>() {
 
-            private int sum = 0;
+            private double sum = 0;
             private int count = 0;
 
             @Override
@@ -26,13 +26,13 @@ public class Query5Combiner implements CombinerFactory<String,Pair<Integer, Inte
             }
 
             @Override
-            public void combine(Pair<Integer, Integer> pair) {
+            public void combine(Pair<Double, Integer> pair) {
                 this.sum+=pair.getFirst();
                 this.count+=pair.getSecond();
             }
 
             @Override
-            public Pair<Integer, Integer> finalizeChunk() {
+            public Pair<Double, Integer> finalizeChunk() {
                 return new Pair<>(this.sum, this.count);
             }
         };

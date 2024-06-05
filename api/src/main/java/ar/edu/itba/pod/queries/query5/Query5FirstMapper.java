@@ -5,9 +5,9 @@ import ar.edu.itba.pod.data.Ticket;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
-public class Query5FirstMapper  implements Mapper<String, Ticket, String, Pair<Integer, Integer>> {
+public class Query5FirstMapper  implements Mapper<String, Double, String, Pair<Double, Integer>> {
     @Override
-    public void map(String s, Ticket ticket, Context<String, Pair<Integer, Integer>> context) {
-        context.emit(ticket.getInfractionCode(), new Pair<>(ticket.getFineAmount(), 1));
+    public void map(String key, Double val, Context<String, Pair<Double, Integer>> context) {
+        context.emit(key, new Pair<>(val, 1));
     }
 }

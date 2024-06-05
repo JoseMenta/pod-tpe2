@@ -20,11 +20,11 @@ public class Ticket implements DataSerializable {
     private String plate;
     private LocalDateTime issueDate;
     private String infractionCode;
-    private Integer fineAmount; //Integer to avoid generic problems
+    private Double fineAmount; //Double to avoid generic problems
     private String neighbourhood;
     private String agency;
 
-    public Ticket(String plate, LocalDateTime issueDate, String infractionCode, Integer fineAmount, String neighbourhood, String agency) {
+    public Ticket(String plate, LocalDateTime issueDate, String infractionCode, Double fineAmount, String neighbourhood, String agency) {
         this.plate = plate;
         this.issueDate = issueDate;
         this.infractionCode = infractionCode;
@@ -38,7 +38,7 @@ public class Ticket implements DataSerializable {
         out.writeUTF(plate);
         out.writeObject(issueDate);
         out.writeUTF(infractionCode);
-        out.writeInt(fineAmount);
+        out.writeDouble(fineAmount);
         out.writeUTF(neighbourhood);
         out.writeUTF(agency);
     }
@@ -48,7 +48,7 @@ public class Ticket implements DataSerializable {
         plate = in.readUTF();
         issueDate = in.readObject();
         infractionCode = in.readUTF();
-        fineAmount = in.readInt();
+        fineAmount = in.readDouble();
         neighbourhood = in.readUTF();
         agency = in.readUTF();
     }

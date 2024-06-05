@@ -110,12 +110,11 @@ public abstract class QueryClient implements Closeable {
 
     protected final Ticket nyTicketMapper(String row){
         String[] vals = row.split(CSV_SEPARATOR);
-        Double aux = Double.parseDouble(vals[3]);
         return new Ticket(
                 vals[0],
                 LocalDateTime.of(LocalDate.parse(vals[1],DateTimeFormatter.ISO_DATE), LocalTime.of(0,0,0)),
                 vals[2],
-                aux.intValue(),
+                Double.parseDouble(vals[3]),
                 vals[4],
                 vals[5]
         );
@@ -127,7 +126,7 @@ public abstract class QueryClient implements Closeable {
                 vals[1],
                 LocalDateTime.parse(vals[0],DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 vals[2],
-                Integer.parseInt(vals[4]),
+                Double.parseDouble(vals[4]),
                 vals[5],
                 vals[3]
         );

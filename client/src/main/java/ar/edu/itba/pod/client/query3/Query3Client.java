@@ -26,7 +26,7 @@ public class Query3Client extends QueryClient {
 
     private final Map<String, Infraction> infractionsMap;
 
-    private final MultiMap<String, Ticket> ticketsMap;
+    private final MultiMap<String, Double> ticketsMap;
 
     private final int cant;
 
@@ -51,15 +51,15 @@ public class Query3Client extends QueryClient {
     private void loadTickets( ){
         loadData(this.ticketPath,
                 getMapper(),
-                Ticket::getInfractionCode,
-                i -> i,
+                Ticket::getAgency,
+                Ticket::getFineAmount,
                 ticketsMap::put);
     }
 
     public SortedSet<Query3Result> executeJob() throws ExecutionException, InterruptedException {
         final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
-        final KeyValueSource<String,Ticket> source = KeyValueSource.fromMultiMap(ticketsMap);
-        final Job<String, Ticket> job = tracker.newJob(source);
+        final KeyValueSource<String,Double> source = KeyValueSource.fromMultiMap(ticketsMap);
+        final Job<String, Double> job = tracker.newJob(source);
 
         return job
                 .mapper(new Query3Mapper())

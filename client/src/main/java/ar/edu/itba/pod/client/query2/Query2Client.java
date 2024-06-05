@@ -2,11 +2,9 @@ package ar.edu.itba.pod.client.query2;
 
 import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.client.QueryClient;
-import ar.edu.itba.pod.client.utilities.City;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Pair;
 import ar.edu.itba.pod.data.Ticket;
-import ar.edu.itba.pod.data.results.Query1Result;
 import ar.edu.itba.pod.data.results.Query2Result;
 import ar.edu.itba.pod.queries.query2.*;
 import com.hazelcast.core.IMap;
@@ -21,14 +19,13 @@ import java.util.SortedSet;
 import java.util.concurrent.ExecutionException;
 
 import static ar.edu.itba.pod.Util.QUERY_2_NAMESPACE;
-import static ar.edu.itba.pod.Util.QUERY_4_NAMESPACE;
 
 
 public class Query2Client extends QueryClient {
 
     private final Map<String, Infraction> infractionsMap;
 
-    private final MultiMap<String, Ticket> ticketsMap;
+    private final MultiMap<String, String> ticketsMap;
 
     private final IMap<Pair<String,String>,Integer> auxMap;
 
@@ -49,15 +46,15 @@ public class Query2Client extends QueryClient {
     private void loadTickets(){
         loadData(this.ticketPath,
                 getMapper(),
+                Ticket::getNeighbourhood,
                 Ticket::getInfractionCode,
-                i -> i,
                 ticketsMap::put);
     }
 
     public SortedSet<Query2Result> executeJob() throws ExecutionException, InterruptedException {
         final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
-        final KeyValueSource<String,Ticket> source = KeyValueSource.fromMultiMap(ticketsMap);
-        final Job<String, Ticket> job = tracker.newJob(source);
+        final KeyValueSource<String,String> source = KeyValueSource.fromMultiMap(ticketsMap);
+        final Job<String, String> job = tracker.newJob(source);
 
         Map<Pair<String,String>,Integer> aux = job
                 .mapper(new Query2FirstMapper())

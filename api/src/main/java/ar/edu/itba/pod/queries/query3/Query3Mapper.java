@@ -4,11 +4,11 @@ import ar.edu.itba.pod.data.Ticket;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
-public class Query3Mapper implements Mapper<String, Ticket, String, Integer> {
+public class Query3Mapper implements Mapper<String, Integer, String, Integer> {
 
     @Override
-    public void map(String s, Ticket ticket, Context<String, Integer> context) {
-        context.emit(ticket.getAgency(), ticket.getFineAmount());
+    public void map(String key, Integer value, Context<String, Integer> context) {
+        context.emit(key, value);
     }
 
 }

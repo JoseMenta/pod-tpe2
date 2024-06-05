@@ -2,18 +2,10 @@ package ar.edu.itba.pod.client.query4;
 
 import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.client.QueryClient;
-import ar.edu.itba.pod.client.query2.Query2Client;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Pair;
 import ar.edu.itba.pod.data.Ticket;
-import ar.edu.itba.pod.data.results.Query2Result;
-import ar.edu.itba.pod.data.results.Query3Result;
 import ar.edu.itba.pod.data.results.Query4Result;
-import ar.edu.itba.pod.queries.query2.*;
-import ar.edu.itba.pod.queries.query3.Query3Collator;
-import ar.edu.itba.pod.queries.query3.Query3Combiner;
-import ar.edu.itba.pod.queries.query3.Query3Mapper;
-import ar.edu.itba.pod.queries.query3.Query3Reducer;
 import ar.edu.itba.pod.queries.query4.*;
 import com.hazelcast.core.IMap;
 import com.hazelcast.core.MultiMap;
@@ -35,7 +27,7 @@ public class Query4Client extends QueryClient {
 
     private final IMap<String, Infraction> infractionsMap;
 
-    private final MultiMap<LocalDateTime, Ticket> ticketsMap;
+    private final MultiMap<LocalDateTime, Pair<String,String>> ticketsMap;
     private final IMap<Pair<String, String>, Integer> auxMap;
 
     private final LocalDateTime from;
@@ -67,7 +59,7 @@ public class Query4Client extends QueryClient {
         loadData(this.ticketPath,
                 getMapper(),
                 Ticket::getIssueDate,
-                i -> i,
+                i -> new Pair<>(i.getNeighbourhood(),i.getPlate()),
                 ticketsMap::put);
 
     }
@@ -84,8 +76,8 @@ public class Query4Client extends QueryClient {
     public SortedSet<Query4Result> executeJob() throws ExecutionException, InterruptedException {
 
         final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
-        final KeyValueSource<LocalDateTime,Ticket> source = KeyValueSource.fromMultiMap(ticketsMap);
-        final Job<LocalDateTime, Ticket> firstJob = tracker.newJob(source);
+        final KeyValueSource<LocalDateTime,Pair<String,String>> source = KeyValueSource.fromMultiMap(ticketsMap);
+        final Job<LocalDateTime, Pair<String,String>> firstJob = tracker.newJob(source);
 
         Map<Pair<String,String>, Integer> aux = firstJob
                 .mapper(new Query4FirstMapper(new Pair<>(from, to)))

@@ -2,7 +2,6 @@ package ar.edu.itba.pod.client.query1;
 
 import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.client.QueryClient;
-import ar.edu.itba.pod.client.utilities.City;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Ticket;
 import ar.edu.itba.pod.data.results.Query1Result;
@@ -26,10 +25,9 @@ public class Query1Client extends QueryClient {
 
 
 
-    //TODO: ver si no es mejor guardar directo <String, String>, lo hago asi por ahora (debería cambiarse el keyMapper)
     private final Map<String, Infraction> infractionsMap;
 
-    private final MultiMap<String, Ticket> ticketsMap;
+    private final MultiMap<String, String> ticketsMap;
 
     public Query1Client(String query){
         super(query);
@@ -49,7 +47,7 @@ public class Query1Client extends QueryClient {
         loadData(this.ticketPath,
                 getMapper(),
                 Ticket::getInfractionCode,
-                i -> i,
+                Ticket::getInfractionCode, //TODO: check if loading a 1 is valid
                 ticketsMap::put);
     }
 
@@ -62,8 +60,8 @@ public class Query1Client extends QueryClient {
 
     public SortedSet<Query1Result> executeJob() throws ExecutionException, InterruptedException {
         final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
-        final KeyValueSource<String,Ticket> source = KeyValueSource.fromMultiMap(ticketsMap);
-        final Job<String, Ticket> job = tracker.newJob(source);
+        final KeyValueSource<String,String> source = KeyValueSource.fromMultiMap(ticketsMap);
+        final Job<String, String> job = tracker.newJob(source);
 
         return job
                 .mapper(new Query1Mapper())

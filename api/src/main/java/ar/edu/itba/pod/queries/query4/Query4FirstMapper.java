@@ -7,7 +7,7 @@ import com.hazelcast.mapreduce.Mapper;
 
 import java.time.LocalDateTime;
 
-public class Query4FirstMapper implements Mapper<LocalDateTime, Ticket, Pair<String, String>, Integer> {
+public class Query4FirstMapper implements Mapper<LocalDateTime, Pair<String,String>, Pair<String, String>, Integer> {
 
     // Defines the time range of tickets to consider
     // Should be null if Query4KeyPredicate is used
@@ -40,21 +40,14 @@ public class Query4FirstMapper implements Mapper<LocalDateTime, Ticket, Pair<Str
         return null;
     }
 
-    private Pair<String, String> getKey(final Ticket ticket) {
-        return new Pair<>(
-                ticket.getNeighbourhood(),
-                ticket.getPlate()
-        );
-    }
-
     /**
      * Maps the (dateTime, ticket) pair to the (<neighbourhood, plate>, 1) pair
      * if dateTime is included in the timeRange
      */
     @Override
-    public void map(LocalDateTime dateTime, Ticket ticket, Context<Pair<String, String>, Integer> context) {
+    public void map(LocalDateTime dateTime, Pair<String,String> val, Context<Pair<String, String>, Integer> context) {
         if (Query4KeyPredicate.isDateTimeInRange(start, end, dateTime)) {
-            context.emit(getKey(ticket), 1);
+            context.emit(val, 1);
         }
     }
 }

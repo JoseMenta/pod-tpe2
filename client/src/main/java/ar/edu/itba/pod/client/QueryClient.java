@@ -18,7 +18,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -108,11 +110,12 @@ public abstract class QueryClient implements Closeable {
 
     protected final Ticket nyTicketMapper(String row){
         String[] vals = row.split(CSV_SEPARATOR);
+        Double aux = Double.parseDouble(vals[3]);
         return new Ticket(
                 vals[0],
-                LocalDateTime.parse(vals[1], DateTimeFormatter.ISO_DATE),
+                LocalDateTime.of(LocalDate.parse(vals[1],DateTimeFormatter.ISO_DATE), LocalTime.of(0,0,0)),
                 vals[2],
-                Integer.parseInt(vals[3]),
+                aux.intValue(),
                 vals[4],
                 vals[5]
         );

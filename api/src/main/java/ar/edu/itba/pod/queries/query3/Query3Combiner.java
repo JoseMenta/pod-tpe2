@@ -3,13 +3,13 @@ package ar.edu.itba.pod.queries.query3;
 import com.hazelcast.mapreduce.Combiner;
 import com.hazelcast.mapreduce.CombinerFactory;
 
-public class Query3Combiner implements CombinerFactory<String,Integer,Integer> {
+public class Query3Combiner implements CombinerFactory<String,Double,Double> {
 
     @Override
-    public Combiner<Integer, Integer> newCombiner(String s) {
-        return new Combiner<Integer, Integer>() {
+    public Combiner<Double, Double> newCombiner(String s) {
+        return new Combiner<Double, Double>() {
 
-            private int sum = 0;
+            private double sum = 0;
 
             @Override
             public void beginCombine() {
@@ -22,12 +22,12 @@ public class Query3Combiner implements CombinerFactory<String,Integer,Integer> {
             }
 
             @Override
-            public void combine(Integer integer) {
+            public void combine(Double integer) {
                 this.sum+=integer;
             }
 
             @Override
-            public Integer finalizeChunk() {
+            public Double finalizeChunk() {
                 return sum;
             }
         };

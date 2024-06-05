@@ -4,12 +4,12 @@ import ar.edu.itba.pod.data.Pair;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-public class Query5FirstReducer  implements ReducerFactory<String, Pair<Integer, Integer>, Integer> {
+public class Query5FirstReducer  implements ReducerFactory<String, Pair<Double, Integer>, Integer> {
     @Override
-    public Reducer<Pair<Integer, Integer>, Integer> newReducer(String s) {
-        return new Reducer<Pair<Integer, Integer>, Integer>() {
+    public Reducer<Pair<Double, Integer>, Integer> newReducer(String s) {
+        return new Reducer<Pair<Double, Integer>, Integer>() {
 
-            private int sum = 0;
+            private double sum = 0;
             private int count = 0;
             @Override
             public void beginReduce() {
@@ -18,14 +18,14 @@ public class Query5FirstReducer  implements ReducerFactory<String, Pair<Integer,
             }
 
             @Override
-            public void reduce(Pair<Integer, Integer> pair) {
+            public void reduce(Pair<Double, Integer> pair) {
                 this.sum+= pair.getFirst();
                 this.count+= pair.getSecond();
             }
 
             @Override
             public Integer finalizeReduce() {
-                return this.sum / this.count;
+                return (int) (this.sum / this.count);
             }
         };
     }

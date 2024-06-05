@@ -15,6 +15,12 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -76,7 +82,15 @@ public class Query1Client extends QueryClient {
     public static void main(String[] args) {
 
 
-        try(Query1Client client = new Query1Client("query1")){
+        try(
+                Query1Client client = new Query1Client("query1");
+                BufferedWriter bw = Files.newBufferedWriter(
+                        Paths.get(client.csvPath),
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING,
+                        StandardOpenOption.WRITE
+                )
+        ){
             //Load data
             client.loadInfractions();
             client.loadTickets();
@@ -84,19 +98,16 @@ public class Query1Client extends QueryClient {
             System.out.println("Started");
             //Execute job
             SortedSet<Query1Result> ans = client.executeJob();
+
+            // Write to CSV i
+            bw.write(String.format("%s;%s\n", "Infraction", "Tickets"));
+            for (Query1Result result: ans) {
+                bw.write(String.format("%s;%d\n",result.infraction(),result.tickets()));
+            }
             System.out.println("Ended");
-
-
-            //Print results
-            ans.forEach(System.out::println);
-
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
 

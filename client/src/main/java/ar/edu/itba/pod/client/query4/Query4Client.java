@@ -50,7 +50,7 @@ public class Query4Client extends QueryClient {
     private void loadInfractions(){
         loadData(this.infractionPath,
                 this::infractionMapper,
-                Infraction::getCode,
+                (index, val)->val.getCode(),
                 i->i,
                 infractionsMap::put);
     }
@@ -58,7 +58,7 @@ public class Query4Client extends QueryClient {
     private void loadTickets( ){
         loadData(this.ticketPath,
                 getMapper(),
-                Ticket::getIssueDate,
+                (index, val)->val.getIssueDate(),
                 i -> new Pair<>(i.getNeighbourhood(),i.getPlate()),
                 ticketsMap::put);
 

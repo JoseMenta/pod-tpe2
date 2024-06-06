@@ -33,7 +33,7 @@ public class Query1Client extends QueryClient {
 
     private final Map<String, Infraction> infractionsMap;
 
-    private final MultiMap<String, String> ticketsMap;
+    private final MultiMap<Integer, String> ticketsMap;
 
     public Query1Client(String query){
         super(query);
@@ -44,7 +44,7 @@ public class Query1Client extends QueryClient {
     private void loadInfractions(){
         loadData(this.infractionPath,
                 this::infractionMapper,
-                Infraction::getCode,
+                (index, val)->val.getCode(),
                 i->i,
                 infractionsMap::put);
     }
@@ -52,8 +52,8 @@ public class Query1Client extends QueryClient {
     private void loadTickets(){
         loadData(this.ticketPath,
                 getMapper(),
+                (index,val)->index,
                 Ticket::getInfractionCode,
-                Ticket::getInfractionCode, //TODO: check if loading a 1 is valid
                 ticketsMap::put);
     }
 
@@ -66,8 +66,8 @@ public class Query1Client extends QueryClient {
 
     public SortedSet<Query1Result> executeJob() throws ExecutionException, InterruptedException {
         final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
-        final KeyValueSource<String,String> source = KeyValueSource.fromMultiMap(ticketsMap);
-        final Job<String, String> job = tracker.newJob(source);
+        final KeyValueSource<Integer,String> source = KeyValueSource.fromMultiMap(ticketsMap);
+        final Job<Integer, String> job = tracker.newJob(source);
 
         return job
                 .mapper(new Query1Mapper())
@@ -96,6 +96,8 @@ public class Query1Client extends QueryClient {
             System.out.println("Started");
             //Execute job
             SortedSet<Query1Result> ans = client.executeJob();
+
+            ans.forEach(System.out::println);
 
             // Write to CSV i
             bw.write(String.format("%s;%s\n", "Infraction", "Tickets"));

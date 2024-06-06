@@ -3,6 +3,7 @@ package ar.edu.itba.pod.client;
 import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.client.utilities.City;
 import ar.edu.itba.pod.data.Infraction;
+import ar.edu.itba.pod.data.Pair;
 import ar.edu.itba.pod.data.Ticket;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
@@ -22,7 +23,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -142,7 +145,7 @@ public abstract class QueryClient implements Closeable {
 
     protected final <D,K,V> void loadData(final String csvPath,
                                           Function<String,D> rowMapper,
-                                          Function<D,K> keyMapper,
+                                          BiFunction<Integer,D,K> keyMapper,
                                           Function<D,V> valueMapper,
                                           BiConsumer<K,V> consumer){
         LOGGER.error("Start loading data from {}",csvPath);
@@ -151,10 +154,13 @@ public abstract class QueryClient implements Closeable {
             throw new IllegalStateException();
         }
         try (final Stream<String> lines = Files.lines(Path.of(csvPath)).skip(1).parallel()) {
-            lines.forEach(l ->{
-                D data = rowMapper.apply(l);
+            final AtomicInteger counter = new AtomicInteger();
+            lines
+                    .map(l -> new Pair<>(counter.getAndIncrement(),l))
+                    .forEach(p ->{
+                D data = rowMapper.apply(p.getSecond());
                 V value = valueMapper.apply(data);
-                K key = keyMapper.apply(data); //extract the key from the value, or other data
+                K key = keyMapper.apply(p.getFirst(),data); //extract the key from the value, or other data
                 consumer.accept(key,value);
             });
             writeTime("Finished loading data for " + csvPath);

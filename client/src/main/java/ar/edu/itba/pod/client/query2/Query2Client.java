@@ -25,7 +25,7 @@ public class Query2Client extends QueryClient {
 
     private final Map<String, Infraction> infractionsMap;
 
-    private final MultiMap<String, String> ticketsMap;
+    private final MultiMap<Integer, Pair<String,String>> ticketsMap;
 
     private final IMap<Pair<String,String>,Integer> auxMap;
 
@@ -38,7 +38,7 @@ public class Query2Client extends QueryClient {
     private void loadInfractions(){
         loadData(this.infractionPath,
                 this::infractionMapper,
-                Infraction::getCode,
+                (index, val)->val.getCode(),
                 i->i,
                 infractionsMap::put);
     }
@@ -46,15 +46,15 @@ public class Query2Client extends QueryClient {
     private void loadTickets(){
         loadData(this.ticketPath,
                 getMapper(),
-                Ticket::getNeighbourhood,
-                Ticket::getInfractionCode,
+                (index,val)->index,
+                v -> new Pair<>(v.getNeighbourhood(),v.getInfractionCode()),
                 ticketsMap::put);
     }
 
     public SortedSet<Query2Result> executeJob() throws ExecutionException, InterruptedException {
         final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
-        final KeyValueSource<String,String> source = KeyValueSource.fromMultiMap(ticketsMap);
-        final Job<String, String> job = tracker.newJob(source);
+        final KeyValueSource<Integer,Pair<String,String>> source = KeyValueSource.fromMultiMap(ticketsMap);
+        final Job<Integer, Pair<String,String>> job = tracker.newJob(source);
 
         Map<Pair<String,String>,Integer> aux = job
                 .mapper(new Query2FirstMapper())

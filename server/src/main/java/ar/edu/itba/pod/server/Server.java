@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Collections;
 
+//Accept repeated key and value multimap
+//https://docs.hazelcast.com/hazelcast/5.4/data-structures/multimap#:~:text=Configuring%20MultiMap,-When%20using%20MultiMap&text=Configure%20the%20collection%20type%20with,duplicate%20but%20not%20null%20values.
+
 public class Server {
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
@@ -22,6 +25,11 @@ public class Server {
                 .setName(Util.HAZELCAST_GROUP_NAME)
                 .setPassword(Util.HAZELCAST_GROUP_PASSWORD);
         config.setGroupConfig(groupConfig);
+
+        MultiMapConfig multiMapConfig = new MultiMapConfig();
+        multiMapConfig.setName("default");
+        multiMapConfig.setValueCollectionType(MultiMapConfig.ValueCollectionType.LIST);
+        config.addMultiMapConfig(multiMapConfig);
 
         //Network config
         MulticastConfig multicastConfig = new MulticastConfig();

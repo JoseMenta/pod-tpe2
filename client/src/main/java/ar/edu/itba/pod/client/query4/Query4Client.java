@@ -116,7 +116,7 @@ public class Query4Client extends QueryClient {
             //Print results
             client.writeResults(CSV_HEADERS,
                     ans,
-                    e -> String.format("%s;%s;%d",e.neighbourhood(),e.plate(),e.total()));
+                    e -> String.format("%s;%s;%d\n",e.neighbourhood(),e.plate(),e.total()));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

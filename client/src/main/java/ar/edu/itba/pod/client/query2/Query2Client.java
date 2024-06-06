@@ -13,6 +13,7 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -22,6 +23,8 @@ import static ar.edu.itba.pod.Util.QUERY_2_NAMESPACE;
 
 
 public class Query2Client extends QueryClient {
+
+    private static final List<String> CSV_HEADERS = List.of("Country","InfractionTop1","InfractionTop2","InfractionTop3");
 
     private final Map<String, Infraction> infractionsMap;
 
@@ -89,14 +92,14 @@ public class Query2Client extends QueryClient {
             client.loadInfractions();
             client.loadTickets();
 
-            System.out.println("Started");
             //Execute job
             SortedSet<Query2Result> ans = client.executeJob();
-            System.out.println("Ended");
 
 
             //Print results
-            ans.forEach(System.out::println);
+            client.writeResults(CSV_HEADERS,
+                    ans,
+                    e -> String.format("%s;%s\n",e.neighbourhood(),String.join(";",e.infractions())));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

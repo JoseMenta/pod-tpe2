@@ -14,12 +14,7 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -29,7 +24,7 @@ import static ar.edu.itba.pod.Util.QUERY_1_NAMESPACE;
 
 public class Query1Client extends QueryClient {
 
-
+    private static final List<String> CSV_HEADERS = List.of("Infraction","Tickets");
 
     private final Map<String, Infraction> infractionsMap;
 
@@ -82,28 +77,19 @@ public class Query1Client extends QueryClient {
 
         try(
                 Query1Client client = new Query1Client("query1");
-                BufferedWriter bw = Files.newBufferedWriter(
-                        Paths.get(client.csvPath),
-                        StandardOpenOption.CREATE,
-                        StandardOpenOption.TRUNCATE_EXISTING,
-                        StandardOpenOption.WRITE
-                )
         ){
             //Load data
             client.loadInfractions();
             client.loadTickets();
 
-            System.out.println("Started");
             //Execute job
             SortedSet<Query1Result> ans = client.executeJob();
 
-            // Write to CSV i
-            bw.write(String.format("%s;%s\n", "Infraction", "Tickets"));
-            for (Query1Result result: ans) {
-                bw.write(String.format("%s;%d\n",result.infraction(),result.tickets()));
-            }
-            System.out.println("Ended");
-        } catch (ExecutionException | InterruptedException | IOException e) {
+            // Write to CSV
+            client.writeResults(CSV_HEADERS,
+                    ans,
+                    v -> String.format("%s;%d\n",v.infraction(),v.tickets()));
+        } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

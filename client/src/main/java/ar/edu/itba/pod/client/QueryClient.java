@@ -12,16 +12,17 @@ import com.hazelcast.core.HazelcastInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -35,7 +36,7 @@ public abstract class QueryClient implements Closeable {
     private static final String CSV_SEPARATOR = ";";
     private static final String TICKETS_CSV = "/tickets";
     private static final String INFRACTIONS_CSV = "/infractions";
-    private static final String TIME_TXT = "/time.text";
+    private static final String TIME_TXT = "/time.txt";
 
     private final FileWriter timeFile;
 
@@ -45,6 +46,7 @@ public abstract class QueryClient implements Closeable {
     protected final String ticketPath;
     protected final HazelcastInstance hazelcast;
     protected final City city;
+
     public QueryClient(String query)  {
         LOGGER.info("Starting Hazelcast client...");
 
@@ -145,7 +147,7 @@ public abstract class QueryClient implements Closeable {
                                           Function<D,K> keyMapper,
                                           Function<D,V> valueMapper,
                                           BiConsumer<K,V> consumer){
-        LOGGER.error("Start loading data from {}",csvPath);
+        LOGGER.info("Start loading data from {}",csvPath);
         writeTime("Start loading data from " + csvPath);
         if(this.hazelcast == null){
             throw new IllegalStateException();
@@ -170,6 +172,24 @@ public abstract class QueryClient implements Closeable {
             timeFile.write(LocalDateTime.now() + " " + message + "\n");
         } catch (IOException e) {
             LOGGER.error("Could not write time to file");
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected <T>void writeResults(final List<String> headerTitles,
+                                   final Collection<T> rows,
+                                   final Function<T,String> rowFormatter){
+        try(BufferedWriter bw = Files.newBufferedWriter(
+                        Paths.get(this.csvPath),
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING,
+                        StandardOpenOption.WRITE
+                )){
+            bw.write(String.join(";",headerTitles)+"\n");
+            for(T e : rows){
+                bw.write(rowFormatter.apply(e));
+            }
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

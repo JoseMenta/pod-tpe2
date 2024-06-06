@@ -16,6 +16,7 @@ import com.hazelcast.mapreduce.KeyValueSource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -24,6 +25,8 @@ import java.util.concurrent.ExecutionException;
 import static ar.edu.itba.pod.Util.QUERY_4_NAMESPACE;
 
 public class Query4Client extends QueryClient {
+
+    private static final List<String> CSV_HEADERS = List.of("Country","Plate","Tickets");
 
     private final IMap<String, Infraction> infractionsMap;
 
@@ -47,6 +50,7 @@ public class Query4Client extends QueryClient {
         this.from = LocalDate.parse(fromString, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
         this.to = LocalDate.parse(toString, DateTimeFormatter.ofPattern("dd/MM/yyyy")).atStartOfDay();
     }
+
     private void loadInfractions(){
         loadData(this.infractionPath,
                 this::infractionMapper,
@@ -105,14 +109,14 @@ public class Query4Client extends QueryClient {
             client.loadInfractions();
             client.loadTickets();
 
-            System.out.println("Started");
             //Execute job
             SortedSet<Query4Result> ans = client.executeJob();
-            System.out.println("Ended");
 
 
             //Print results
-            ans.forEach(System.out::println);
+            client.writeResults(CSV_HEADERS,
+                    ans,
+                    e -> String.format("%s;%s;%d",e.neighbourhood(),e.plate(),e.total()));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

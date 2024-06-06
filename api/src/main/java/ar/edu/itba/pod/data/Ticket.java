@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 //Avoid overriding equals and hashCode
 //https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Record.html#equals(java.lang.Object)

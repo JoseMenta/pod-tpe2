@@ -2,11 +2,8 @@ package ar.edu.itba.pod.client.query5;
 
 import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.client.QueryClient;
-import ar.edu.itba.pod.client.utilities.City;
 import ar.edu.itba.pod.data.Infraction;
-import ar.edu.itba.pod.data.Pair;
 import ar.edu.itba.pod.data.Ticket;
-import ar.edu.itba.pod.data.results.Query2Result;
 import ar.edu.itba.pod.data.results.Query5Result;
 import ar.edu.itba.pod.queries.query5.*;
 import com.hazelcast.core.IMap;
@@ -15,6 +12,7 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -22,17 +20,21 @@ import java.util.concurrent.ExecutionException;
 
 public class Query5Client extends QueryClient {
 
+    private static final List<String> CSV_HEADERS = List.of("Group","Infraction A","Infraction B");
+
     private final IMap<String, Infraction> infractionsMap;
 
     private final MultiMap<String, Double> ticketsMap;
 
     private final IMap<String, Integer> auxMap;
+
     public Query5Client(String query) {
         super(query);
         this.infractionsMap = hazelcast.getMap(Util.QUERY_5_NAMESPACE);
         this.ticketsMap = hazelcast.getMultiMap(Util.QUERY_5_NAMESPACE);
         this.auxMap = hazelcast.getMap(Util.QUERY_5_NAMESPACE + "-aux");
     }
+
     private void loadInfractions(){
         loadData(this.infractionPath,
                 this::infractionMapper,
@@ -88,14 +90,13 @@ public class Query5Client extends QueryClient {
             client.loadInfractions();
             client.loadTickets();
 
-            System.out.println("Started");
             //Execute job
             SortedSet<Query5Result> ans = client.executeJob();
-            System.out.println("Ended");
-
 
             //Print results
-            ans.forEach(System.out::println);
+            client.writeResults(CSV_HEADERS,
+                    ans,
+                    e -> String.format("%d;%s;%s\n",e.group(),e.tuple().getFirst(),e.tuple().getSecond()));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

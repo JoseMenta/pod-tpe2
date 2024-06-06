@@ -1,7 +1,6 @@
 package ar.edu.itba.pod.queries.query4;
 
 import ar.edu.itba.pod.data.Pair;
-import ar.edu.itba.pod.data.Ticket;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 

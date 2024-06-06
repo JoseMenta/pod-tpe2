@@ -2,10 +2,8 @@ package ar.edu.itba.pod.client.query3;
 
 import ar.edu.itba.pod.Util;
 import ar.edu.itba.pod.client.QueryClient;
-import ar.edu.itba.pod.client.utilities.City;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Ticket;
-import ar.edu.itba.pod.data.results.Query1Result;
 import ar.edu.itba.pod.data.results.Query3Result;
 import ar.edu.itba.pod.queries.query3.Query3Collator;
 import ar.edu.itba.pod.queries.query3.Query3Combiner;
@@ -16,6 +14,7 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -23,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 public class Query3Client extends QueryClient {
 
+    private static final List<String> CSV_HEADERS = List.of("Issuing Agency","Percentage");
 
     private final Map<String, Infraction> infractionsMap;
 
@@ -84,12 +84,12 @@ public class Query3Client extends QueryClient {
             client.loadInfractions();
             client.loadTickets();
 
-            System.out.println("Started");
             //Execute job
             SortedSet<Query3Result> ans = client.executeJob();
-            System.out.println("Ended");
 
-            ans.forEach(System.out::println);
+            client.writeResults(CSV_HEADERS,
+                    ans,
+                    e->String.format("%s;%f.2\n",e.agency(),e.percent()));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

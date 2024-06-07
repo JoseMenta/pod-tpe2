@@ -4,11 +4,13 @@ import ar.edu.itba.pod.data.Pair;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
-public class Query2FirstMapper implements Mapper<String, String, Pair<String, String>,Integer> {
+import java.time.LocalDateTime;
+
+public class Query2FirstMapper implements Mapper<LocalDateTime, Pair<String,String>, Pair<String, String>,Integer> {
     @Override
-    public void map(String key, String value, Context<Pair<String, String>, Integer> context) {
-        //key: neighbourhood
-        //value: infraction code
-        context.emit(new Pair<>(key,value),1);
+    public void map(LocalDateTime key, Pair<String,String> value, Context<Pair<String, String>, Integer> context) {
+        //key: timestamp
+        //value: <neighbourhood, infraction code>
+        context.emit(value,1);
     }
 }

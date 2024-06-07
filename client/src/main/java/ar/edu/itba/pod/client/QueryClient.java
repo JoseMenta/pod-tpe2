@@ -165,10 +165,12 @@ public abstract class QueryClient implements Closeable {
             writeTime("Finished loading data for " + csvPath);
             LOGGER.info("Finished loading data for {}",csvPath);
         } catch (IOException e) {
+            writeTime("Finished loading data with error for " + csvPath);
             LOGGER.error("Could not open file {} to load data",csvPath);
             throw new RuntimeException(e);
         }
     }
+
 
     protected void writeTime(String message){
         try {

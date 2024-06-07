@@ -5,6 +5,7 @@ import ar.edu.itba.pod.client.QueryClient;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Pair;
 import ar.edu.itba.pod.data.Ticket;
+import ar.edu.itba.pod.data.results.Query1Result;
 import ar.edu.itba.pod.data.results.Query4Result;
 import ar.edu.itba.pod.queries.query4.*;
 import com.hazelcast.core.IMap;
@@ -110,16 +111,14 @@ public class Query4Client extends QueryClient {
             client.loadTickets();
 
             //Execute job
-            SortedSet<Query4Result> ans = client.executeJob();
+            SortedSet<Query4Result> ans = client.execute(client::executeJob);
 
 
             //Print results
             client.writeResults(CSV_HEADERS,
                     ans,
                     e -> String.format("%s;%s;%d\n",e.neighbourhood(),e.plate(),e.total()));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

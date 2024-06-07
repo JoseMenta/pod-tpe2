@@ -75,7 +75,6 @@ public class Query1Client extends QueryClient {
 
     public static void main(String[] args) {
 
-
         try(
                 Query1Client client = new Query1Client("query1");
         ){
@@ -84,13 +83,13 @@ public class Query1Client extends QueryClient {
             client.loadTickets();
 
             //Execute job
-            SortedSet<Query1Result> ans = client.executeJob();
+            SortedSet<Query1Result> ans = client.execute(client::executeJob);
 
             // Write to CSV
             client.writeResults(CSV_HEADERS,
                     ans,
                     v -> String.format("%s;%d\n",v.infraction(),v.tickets()));
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

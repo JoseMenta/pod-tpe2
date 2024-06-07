@@ -23,8 +23,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public abstract class QueryClient implements Closeable {
@@ -176,7 +179,7 @@ public abstract class QueryClient implements Closeable {
         }
     }
 
-    protected <T>void writeResults(final List<String> headerTitles,
+    protected <T> void writeResults(final List<String> headerTitles,
                                    final Collection<T> rows,
                                    final Function<T,String> rowFormatter){
         try(BufferedWriter bw = Files.newBufferedWriter(
@@ -192,6 +195,13 @@ public abstract class QueryClient implements Closeable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected <T> T execute(Callable<T> supplier) throws Exception{
+        this.writeTime("Start MapReduce Job");
+        T ans = supplier.call();
+        this.writeTime("End MapReduce Job");
+        return ans;
     }
 
 

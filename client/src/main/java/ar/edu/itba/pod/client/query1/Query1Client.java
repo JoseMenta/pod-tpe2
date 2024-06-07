@@ -14,6 +14,7 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class Query1Client extends QueryClient {
 
     private final Map<String, Infraction> infractionsMap;
 
-    private final MultiMap<String, String> ticketsMap;
+    private final MultiMap<LocalDateTime, String> ticketsMap;
 
     public Query1Client(String query){
         super(query);
@@ -47,7 +48,7 @@ public class Query1Client extends QueryClient {
     private void loadTickets(){
         loadData(this.ticketPath,
                 getMapper(),
-                Ticket::getInfractionCode,
+                Ticket::getIssueDate,
                 Ticket::getInfractionCode, //TODO: check if loading a 1 is valid
                 ticketsMap::put);
     }
@@ -61,8 +62,8 @@ public class Query1Client extends QueryClient {
 
     public SortedSet<Query1Result> executeJob() throws ExecutionException, InterruptedException {
         final JobTracker tracker = this.hazelcast.getJobTracker(Util.HAZELCAST_NAMESPACE);
-        final KeyValueSource<String,String> source = KeyValueSource.fromMultiMap(ticketsMap);
-        final Job<String, String> job = tracker.newJob(source);
+        final KeyValueSource<LocalDateTime,String> source = KeyValueSource.fromMultiMap(ticketsMap);
+        final Job<LocalDateTime, String> job = tracker.newJob(source);
 
         return job
                 .mapper(new Query1Mapper())

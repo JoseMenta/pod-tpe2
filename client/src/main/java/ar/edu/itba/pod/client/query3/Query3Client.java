@@ -5,6 +5,7 @@ import ar.edu.itba.pod.client.QueryClient;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Pair;
 import ar.edu.itba.pod.data.Ticket;
+import ar.edu.itba.pod.data.results.Query2Result;
 import ar.edu.itba.pod.data.results.Query3Result;
 import ar.edu.itba.pod.queries.query3.Query3Collator;
 import ar.edu.itba.pod.queries.query3.Query3Combiner;
@@ -87,14 +88,13 @@ public class Query3Client extends QueryClient {
             client.loadTickets();
 
             //Execute job
-            SortedSet<Query3Result> ans = client.executeJob();
+            //SortedSet<Query3Result> ans = client.executeJob();
+            SortedSet<Query3Result> ans = client.execute(client::executeJob);
 
             client.writeResults(CSV_HEADERS,
                     ans,
                     e->String.format("%s;%f.2\n",e.agency(),e.percent()));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

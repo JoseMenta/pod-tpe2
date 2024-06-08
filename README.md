@@ -95,7 +95,7 @@ Para ejecutar la consulta debemos seguir los siguientes pasos:
 
     ```sh query4.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida> -Dfrom=<Fecha desde> -Dto=<Fecha hasta>```
 
-> [!NOTE] Parametros
+> [!NOTE]
 > Los parametros From y To deben ir en el siguiente formato `dd/MM/yyyy`.
 
 #### Query 5

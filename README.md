@@ -31,15 +31,20 @@ Para la ejecucion del servidor debemos seguir los siguientes pasos:
 > Para poder seguir los siguientes pasos debemos ubicarnos dentro de la carpeta del servidor.
 
 1. Ir al directorio del targe.
-```cd server/target```
+
+    ```cd server/target```
 2. Descomprimir el archivo `tpe2-g6-server-1.0-SNAPSHOT-bin.tar.gz`.
-```tar -xvf tpe2-g6-server-1.0-SNAPSHOT-bin.tar.gz```
+
+    ```tar -xvf tpe2-g6-server-1.0-SNAPSHOT-bin.tar.gz```
 3. Ingresar a la carpeta descomprimida.
-```cd tpe2-g6-server-1.0-SNAPSHOT```
+
+    ```cd tpe2-g6-server-1.0-SNAPSHOT```
 4. Darle permisos de ejecucion al archivo
-```chmod u+x run-server.sh```
+
+    ```chmod u+x run-server.sh```
 5. Ejecutar el servidor.
-```./run-server.sh ```
+
+    ```./run-server.sh ```
 
 ### Cliente
 Para la ejecucion del cliente debemos seguir los siguientes pasos:
@@ -47,13 +52,18 @@ Para la ejecucion del cliente debemos seguir los siguientes pasos:
 > Para poder seguir los siguientes pasos debemos ubicarnos dentro de la carpeta del cliente.
 
 1. Ir al directorio del targe.
-```cd client/target```
+
+    ```cd client/target```
+
 2. Descomprimir el archivo `tpe2-g6-client-1.0-SNAPSHOT-bin.tar.gz`.
-```tar -xvf tpe2-g6-client-1.0-SNAPSHOT-bin.tar.gz```
+
+    ```tar -xvf tpe2-g6-client-1.0-SNAPSHOT-bin.tar.gz```
 3. Ingresar a la carpeta descomprimida.
-```cd tpe2-g6-client-1.0-SNAPSHOT```
+
+    ```cd tpe2-g6-client-1.0-SNAPSHOT```
 4. Darle permisos de ejecucion al archivo
-```chmod u+x query*.sh```
+
+    ```chmod u+x query*.sh```
 
 ### Consultas
 Al ejecutar cada cliente dentro de la carpeta, que se indica como `DoutPath`, se encontrara un CSV con el resultado de la consulta y un archivo `time.txt` con el tiempo que tardo el sistema tanto en subir los datos como en ejecutar el MapReduce.
@@ -61,25 +71,29 @@ Al ejecutar cada cliente dentro de la carpeta, que se indica como `DoutPath`, se
 La Query 1 consiste en obtener el total de multas por cada infraccion.
 Para ejecutar la consulta debemos seguir los siguientes pasos:
 1. Ejecutar el archivo `query1.sh`.
-```sh query1.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida>```
+
+    ```sh query1.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida>```
 
 #### Query 2
 La Query 2 consiste en obtener las top 3 infracciones en cada barrio.
 Para ejecutar la consulta debemos seguir los siguientes pasos:
 1. Ejecutar el archivo `query2.sh`.
-```sh query2.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida>```
+
+    ```sh query2.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida>```
 
 #### Query 3
 La Query 3 consiste en obtener las top N agencias con mayor porcentaje de recaudación.
 Para ejecutar la consulta debemos seguir los siguientes pasos:
 1. Ejecutar el archivo `query3.sh`.
-```sh query3.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida> -Dn=<Numero de agencias>```
+
+    ```sh query3.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida> -Dn=<Numero de agencias>```
 
 #### Query 4
 La Query 4 consiste en obtener la patente con más infracciones de cada barrio en el rango [from, to].
 Para ejecutar la consulta debemos seguir los siguientes pasos:
 1. Ejecutar el archivo `query4.sh`.
-```sh query4.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida> -Dfrom=<Fecha desde> -Dto=<Fecha hasta>```
+
+    ```sh query4.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida> -Dfrom=<Fecha desde> -Dto=<Fecha hasta>```
 
 > [!NOTE] Parametros
 > Los parametros From y To deben ir en el siguiente formato `dd/MM/yyyy`.
@@ -88,7 +102,8 @@ Para ejecutar la consulta debemos seguir los siguientes pasos:
 La Query 5 consiste en obtener pares de infracciones que tienen, en grupos de a cientos, el mismo promedio de monto de multa.
 Para ejecutar la consulta debemos seguir los siguientes pasos:
 1. Ejecutar el archivo `query5.sh`.
-```sh query5.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida>```
+
+    ```sh query5.sh -Daddresses=<Direccion IP del un Nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde esta el CSV> -DoutPath=<Carpeta donde se dejara los archivos de salida>```
 
 # Aclaraciones sobre el proyecto
 Este mismo proyecto es realizado para la meteria Programacion de Objetos Distribuidos del ITBA.

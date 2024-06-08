@@ -27,7 +27,7 @@ Luego de la compilacion del proyecto se generaran los siguientes archivos:
 
 ### Servidor
 Para la ejecucion del servidor debemos seguir los siguientes pasos:
-> [!NOTE] Ubicacion
+> [!NOTE]
 > Para poder seguir los siguientes pasos debemos ubicarnos dentro de la carpeta del servidor.
 
 1. Ir al directorio del targe.
@@ -43,7 +43,7 @@ Para la ejecucion del servidor debemos seguir los siguientes pasos:
 
 ### Cliente
 Para la ejecucion del cliente debemos seguir los siguientes pasos:
-> [!NOTE] Ubicacion
+> [!NOTE]
 > Para poder seguir los siguientes pasos debemos ubicarnos dentro de la carpeta del cliente.
 
 1. Ir al directorio del targe.

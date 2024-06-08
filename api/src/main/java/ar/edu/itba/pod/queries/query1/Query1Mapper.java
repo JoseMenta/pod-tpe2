@@ -5,10 +5,10 @@ import com.hazelcast.mapreduce.Mapper;
 
 import java.time.LocalDateTime;
 
-public class Query1Mapper implements Mapper<LocalDateTime, String, String, Integer> {
+public class Query1Mapper implements Mapper<String, String, String, Integer> {
 
     @Override
-    public void map(LocalDateTime key, String val, Context<String, Integer> context) {
+    public void map(String key, String val, Context<String, Integer> context) {
         context.emit(val,1);
     }
 }

@@ -37,9 +37,9 @@ public abstract class QueryClient implements Closeable {
     private static final String ADDRESSES = "addresses";
     private static final String ADDRESSES_SEPARATOR = ";";
     private static final String CSV_SEPARATOR = ";";
-    private static final String TICKETS_CSV = "/tickets";
-    private static final String INFRACTIONS_CSV = "/infractions";
-    private static final String TIME_TXT = "/time.txt";
+    private static final String TICKETS_CSV = "\\tickets";
+    private static final String INFRACTIONS_CSV = "\\infractions";
+    private static final String TIME_TXT = "time.txt";
 
     private final FileWriter timeFile;
 
@@ -70,8 +70,8 @@ public abstract class QueryClient implements Closeable {
             throw new IllegalArgumentException("Invalid input or output path");
         }
 
-        this.csvPath = outFiles.getAbsolutePath()+"/"+ query + ".csv";
-        this.timePath = inFiles.getAbsolutePath() + TIME_TXT;
+        this.csvPath = outFiles.getAbsolutePath()+"\\"+ query + ".csv";
+        this.timePath = outFiles.getAbsolutePath() + File.separator + TIME_TXT;
 
         this.infractionPath = inFiles.getAbsolutePath() + INFRACTIONS_CSV + this.city.name() + ".csv";
         this.ticketPath = inFiles.getAbsolutePath() + TICKETS_CSV + this.city.name() + ".csv";

@@ -12,6 +12,7 @@ import com.hazelcast.core.IMap;
 import com.hazelcast.core.MultiMap;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
+import com.hazelcast.mapreduce.KeyPredicate;
 import com.hazelcast.mapreduce.KeyValueSource;
 
 import java.time.LocalDate;
@@ -60,10 +61,17 @@ public class Query4Client extends QueryClient {
                 infractionsMap::put);
     }
 
-    private void loadTickets( ){
-        loadData(this.ticketPath,
+    private void loadTickets(){
+//        loadData(this.ticketPath,
+//                getMapper(),
+//                Ticket::getIssueDate,
+//                i -> new Pair<>(i.getNeighbourhood(),i.getPlate()),
+//                ticketsMap::put);
+        final KeyPredicate<LocalDateTime> predicate = new Query4KeyPredicate(new Pair<>(from, to));
+        loadDataWithPredicate(this.ticketPath,
                 getMapper(),
                 Ticket::getIssueDate,
+                predicate::evaluate,
                 i -> new Pair<>(i.getNeighbourhood(),i.getPlate()),
                 ticketsMap::put);
 
@@ -85,6 +93,7 @@ public class Query4Client extends QueryClient {
         final Job<LocalDateTime, Pair<String,String>> firstJob = tracker.newJob(source);
 
         Map<Pair<String,String>, Integer> aux = firstJob
+//                .keyPredicate(new Query4KeyPredicate(new Pair<>(from, to)))
                 .mapper(new Query4FirstMapper(new Pair<>(from, to)))
                 .reducer(new Query4FirstReducer())
                 .submit()

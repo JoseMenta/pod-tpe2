@@ -27,6 +27,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -145,11 +146,13 @@ public abstract class QueryClient implements Closeable {
         );
     }
 
-    protected final <D,K,V> void loadData(final String csvPath,
+
+    protected final <D,K,V> void loadDataWithPredicate(final String csvPath,
                                           Function<String,D> rowMapper,
                                           Function<D,K> keyMapper,
+                                          Predicate<K> keyPredicate,
                                           Function<D,V> valueMapper,
-                                          BiConsumer<K,V> consumer){
+                                          BiConsumer<K,V> consumer) {
         LOGGER.info("Start loading data from {}",csvPath);
         writeTime("Start loading data from " + csvPath);
         if(this.hazelcast == null){
@@ -160,7 +163,9 @@ public abstract class QueryClient implements Closeable {
                 D data = rowMapper.apply(l);
                 V value = valueMapper.apply(data);
                 K key = keyMapper.apply(data); //extract the key from the value, or other data
-                consumer.accept(key,value);
+                if(keyPredicate.test(key)){
+                    consumer.accept(key,value);
+                }
             });
             writeTime("Finished loading data for " + csvPath);
             LOGGER.info("Finished loading data for {}",csvPath);
@@ -169,6 +174,39 @@ public abstract class QueryClient implements Closeable {
             LOGGER.error("Could not open file {} to load data",csvPath);
             throw new RuntimeException(e);
         }
+    }
+
+
+    protected final <D,K,V> void loadData(final String csvPath,
+                                          Function<String,D> rowMapper,
+                                          Function<D,K> keyMapper,
+                                          Function<D,V> valueMapper,
+                                          BiConsumer<K,V> consumer){
+//        LOGGER.info("Start loading data from {}",csvPath);
+//        writeTime("Start loading data from " + csvPath);
+//        if(this.hazelcast == null){
+//            throw new IllegalStateException();
+//        }
+//        try (final Stream<String> lines = Files.lines(Path.of(csvPath)).skip(1).parallel()) {
+//            lines.forEach(l ->{
+//                D data = rowMapper.apply(l);
+//                V value = valueMapper.apply(data);
+//                K key = keyMapper.apply(data); //extract the key from the value, or other data
+//                consumer.accept(key,value);
+//            });
+//            writeTime("Finished loading data for " + csvPath);
+//            LOGGER.info("Finished loading data for {}",csvPath);
+//        } catch (IOException e) {
+//            writeTime("Finished loading data with error for " + csvPath);
+//            LOGGER.error("Could not open file {} to load data",csvPath);
+//            throw new RuntimeException(e);
+//        }
+        loadDataWithPredicate(csvPath,
+                rowMapper,
+                keyMapper,
+                v -> true,
+                valueMapper,
+                consumer);
     }
 
 

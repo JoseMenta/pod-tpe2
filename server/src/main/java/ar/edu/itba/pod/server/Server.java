@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 
 //Accept repeated key and value multimap
@@ -17,6 +18,12 @@ public class Server {
 
     public static void main(String[] args) throws InterruptedException, IOException {
         LOGGER.info("Starting Hazelcast server...");
+
+        //Mask
+        String maybeMask = System.getProperty("mask");
+        String mask = maybeMask != null ? maybeMask : Util.HAZELCAST_DEFAULT_MASK;
+        Collection<String> interfaces = Collections.singletonList(mask);
+
         //Config
         Config config = new Config();
 
@@ -35,7 +42,7 @@ public class Server {
         MulticastConfig multicastConfig = new MulticastConfig();
         JoinConfig joinConfig = new JoinConfig().setMulticastConfig(multicastConfig);
         InterfacesConfig interfacesConfig = new InterfacesConfig()
-                .setInterfaces(Collections.singletonList(Util.HAZELCAST_NETWORK_MASK))
+                .setInterfaces(interfaces)
                 .setEnabled(true);
 
         NetworkConfig networkConfig = new NetworkConfig()

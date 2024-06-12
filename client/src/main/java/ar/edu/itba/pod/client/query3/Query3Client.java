@@ -39,6 +39,7 @@ public class Query3Client extends QueryClient {
         this.ticketsMap = hazelcast.getMultiMap(Util.QUERY_3_NAMESPACE);
         String cant = System.getProperty("n");
         if (cant == null) {
+            this.close();
             throw new IllegalArgumentException("Missing n parameter");
         }
         this.cant = Integer.parseInt(cant);

@@ -92,22 +92,23 @@ public class Query4Client extends QueryClient {
         final KeyValueSource<LocalDateTime,Pair<String,String>> source = KeyValueSource.fromMultiMap(ticketsMap);
         final Job<LocalDateTime, Pair<String,String>> firstJob = tracker.newJob(source);
 
-        Map<Pair<String,String>, Integer> aux = firstJob
+        SortedSet<Query4Result> aux = firstJob
 //                .keyPredicate(new Query4KeyPredicate(new Pair<>(from, to)))
                 .mapper(new Query4FirstMapper(new Pair<>(from, to)))
                 .reducer(new Query4FirstReducer())
-                .submit()
-                .get();
-
-        auxMap.putAll(aux);
-        final KeyValueSource<Pair<String,String>,Integer> secondSource = KeyValueSource.fromMap(auxMap);
-        final Job<Pair<String,String>,Integer>  secondJob = tracker.newJob(secondSource);
-
-        return secondJob
-                .mapper(new Query4SecondMapper())
-                .reducer(new Query4SecondReducer())
                 .submit(new Query4Collator())
                 .get();
+
+        return aux;
+//        auxMap.putAll(aux);
+//        final KeyValueSource<Pair<String,String>,Integer> secondSource = KeyValueSource.fromMap(auxMap);
+//        final Job<Pair<String,String>,Integer>  secondJob = tracker.newJob(secondSource);
+//
+//        return secondJob
+//                .mapper(new Query4SecondMapper())
+//                .reducer(new Query4SecondReducer())
+//                .submit(new Query4Collator())
+//                .get();
     }
 
 

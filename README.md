@@ -53,10 +53,10 @@ Para la ejecucion del servidor debemos seguir los siguientes pasos:
     ```Bash
    chmod u+x run-server.sh
    ```
-5. Ejecutar el servidor.
+5. Ejecutar el servidor. <br>Opcionalmente, se puede indicar la máscara de red en la que se ejecutará el cluster de Hazelcast, con el parámetro `-Dmask` (por defecto, la máscara es `192.168.2.*`).
 
     ```Bash
-   ./run-server.sh 
+   sh run-server.sh [-Dmask=<Mascara de red>] 
    ```
 
 ### Cliente

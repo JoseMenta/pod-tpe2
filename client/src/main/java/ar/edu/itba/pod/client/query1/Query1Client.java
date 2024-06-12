@@ -67,7 +67,7 @@ public class Query1Client extends QueryClient {
 
         return job
                 .mapper(new Query1Mapper())
-//                .combiner(new Query1Combiner())
+                .combiner(new Query1Combiner())
                 .reducer(new Query1Reducer())
                 .submit(new Query1Collator(infractionsMap))
                 .get();

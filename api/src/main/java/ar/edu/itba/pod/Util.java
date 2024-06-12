@@ -7,7 +7,7 @@ public class Util {
     public static final String HAZELCAST_GROUP_PASSWORD = "pod";
     public static final String HAZELCAST_NAMESPACE = "g6-collections";
     // https://docs.hazelcast.org/docs/3.8.6/manual/html-single/index.html#interfaces
-    public static final String HAZELCAST_NETWORK_MASK = "192.168.2.*";
+    public static final String HAZELCAST_DEFAULT_MASK = "192.168.2.*";
 
     public static final String QUERY_1_NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q1";
     public static final String QUERY_2_NAMESPACE = Util.HAZELCAST_NAMESPACE + "-q2";

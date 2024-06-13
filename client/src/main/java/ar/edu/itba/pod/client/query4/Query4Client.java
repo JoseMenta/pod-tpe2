@@ -62,18 +62,18 @@ public class Query4Client extends QueryClient {
     }
 
     private void loadTickets(){
-//        loadData(this.ticketPath,
-//                getMapper(),
-//                Ticket::getIssueDate,
-//                i -> new Pair<>(i.getNeighbourhood(),i.getPlate()),
-//                ticketsMap::put);
-        final KeyPredicate<LocalDateTime> predicate = new Query4KeyPredicate(new Pair<>(from, to));
-        loadDataWithPredicate(this.ticketPath,
+        loadData(this.ticketPath,
                 getMapper(),
                 Ticket::getIssueDate,
-                predicate::evaluate,
                 i -> new Pair<>(i.getNeighbourhood(),i.getPlate()),
                 ticketsMap::put);
+//        final KeyPredicate<LocalDateTime> predicate = new Query4KeyPredicate(new Pair<>(from, to));
+//        loadDataWithPredicate(this.ticketPath,
+//                getMapper(),
+//                Ticket::getIssueDate,
+//                predicate::evaluate,
+//                i -> new Pair<>(i.getNeighbourhood(),i.getPlate()),
+//                ticketsMap::put);
 
     }
 

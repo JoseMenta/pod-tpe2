@@ -94,7 +94,7 @@ public class Query3Client extends QueryClient {
 
             client.writeResults(CSV_HEADERS,
                     ans,
-                    e->String.format("%s;%f.2\n",e.agency(),e.percent()));
+                    e->String.format("%s;%.2f%%\n",e.agency(),e.percent()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -21,8 +21,8 @@ public class Query2SecondReducer implements ReducerFactory<String, Pair<String,I
         return new Reducer<Pair<String, Integer>, List<String>>() {
 
             private static final Comparator<Pair<String,Integer>> COMPARATOR = Comparator.<Pair<String, Integer>, Integer>comparing(Pair::getSecond)
-                        .thenComparing(Pair::getFirst)
-                        .reversed();
+                        .reversed()
+                        .thenComparing(Pair::getFirst); //Nota: no va a ordenar alfabéticamente por infracción porque usa el código, no la descripción
 
             private static final int MAX_ELEMENTS = 3;
 

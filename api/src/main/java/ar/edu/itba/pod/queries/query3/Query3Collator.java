@@ -20,6 +20,7 @@ public class Query3Collator implements Collator<Map.Entry<String,Double>, Sorted
 
     private static final Comparator<Query3Result> COMPARATOR = Comparator
             .comparing(Query3Result::percent)
+            .reversed()
             .thenComparing(Query3Result::agency);
 
     @Override

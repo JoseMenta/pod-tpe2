@@ -2,6 +2,19 @@
 ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 ![Hazelcast](https://img.shields.io/badge/Hazelcast-FF6138?style=for-the-badge&logo=hazelcast&logoColor=white)
+- [Multas de estacionamiento](#multas-de-estacionamiento)
+   - [Requisitos](#requisitos)
+   - [Instalacion](#instalacion)
+   - [Ejecucion](#ejecucion)
+      - [Servidor](#servidor)
+      - [Cliente](#cliente)
+      - [Consultas](#consultas)
+         - [Query 1](#query-1)
+         - [Query 2](#query-2)
+         - [Query 3](#query-3)
+         - [Query 4](#query-4)
+         - [Query 5](#query-5)
+- [Aclaraciones sobre el proyecto](#aclaraciones-sobre-el-proyecto)
 
 # Multas de estacionamiento
 En este proyecto, se implementó un sistema para el análisis de multas de estacionamiento para los datos de las ciudades de Chicago y de Nueva York.
@@ -98,6 +111,11 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
     ```Bash
    sh query1.sh -Daddresses=<Dirección IP de al menos un nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde está el CSV> -DoutPath=<Carpeta donde se dejará los archivos de salida>
    ```
+   Al ejecutar dicha query se genera un archivo CSV con el resultado de la consulta en la carpeta indicada como `DoutPath` con el nombre de `query1.csv`. El formato del archivo sera el siguiente:
+
+   ```CSV
+      Infraction;Tickets
+   ```
 
 #### Query 2
 La Query 2 consiste en obtener las top 3 infracciones en cada barrio.
@@ -106,6 +124,10 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
 
     ```Bash
    sh query2.sh -Daddresses=<Dirección IP de al menos un nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde está el CSV> -DoutPath=<Carpeta donde se dejará los archivos de salida>
+   ```
+   Al ejecutar dicha query se genera un archivo CSV con el resultado de la consulta en la carpeta indicada como `DoutPath` con el nombre de `query2.csv`. El formato del archivo sera el siguiente:
+   ```CSV
+   County;InfractionTop1;InfractionTop2;InfractionTop3
    ```
 
 #### Query 3
@@ -116,6 +138,10 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
     ```Bash
    sh query3.sh -Daddresses=<Dirección IP de al menos un nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde está el CSV> -DoutPath=<Carpeta donde se dejará los archivos de salida> -Dn=<Número de agencias>
    ```
+   Al ejecutar dicha query se genera un archivo CSV con el resultado de la consulta en la carpeta indicada como `DoutPath` con el nombre de `query3.csv`. El formato del archivo sera el siguiente:
+   ```CSV
+   Issuing Agency;Percentage
+   ```
 
 #### Query 4
 La Query 4 consiste en obtener la patente con más infracciones de cada barrio en el rango [from, to].
@@ -124,6 +150,10 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
 
     ```Bash
    sh query4.sh -Daddresses=<Dirección IP de al menos un nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde está el CSV> -DoutPath=<Carpeta donde se dejará los archivos de salida> -Dfrom=<Fecha desde> -Dto=<Fecha hasta>
+   ```
+   Al ejecutar dicha query se genera un archivo CSV con el resultado de la consulta en la carpeta indicada como `DoutPath` con el nombre de `query4.csv`. El formato del archivo sera el siguiente:
+   ```CSV
+   County;Plate;Tickets
    ```
 
 > [!NOTE]
@@ -136,6 +166,10 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
 
     ```Bash
    sh query5.sh -Daddresses=<Dirección IP de al menos un nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde está el CSV> -DoutPath=<Carpeta donde se dejará los archivos de salida>
+   ```
+   Al ejecutar dicha query se genera un archivo CSV con el resultado de la consulta en la carpeta indicada como `DoutPath` con el nombre de `query5.csv`. El formato del archivo sera el siguiente:
+   ```CSV
+   Group;Infraction A;Infraction B
    ```
 
 # Aclaraciones sobre el proyecto

@@ -58,8 +58,8 @@ def query_map_time_full(df):
         positions = indices + i * bar_width
         plt.bar(positions, file_data['Map_reduce'], width=bar_width, label=file)
 
-    plt.ylabel('Tiempo en carga (s)')
-    plt.title('Tiempo en carga de 15 millos de registros para cada Query')
+    plt.ylabel('Tiempo en map/reduce (s)', fontsize=16)
+    plt.title('Tiempo en map/reduce de 15 millos de registros para cada Query', fontsize=16)
     plt.xticks(indices + bar_width * (num_files - 1) / 2, queries)
     plt.grid(False)
     plt.show()
@@ -117,8 +117,8 @@ def query_map_time_1N(df):
         positions = indices + i * bar_width
         plt.bar(positions, file_data['Map_reduce'], width=bar_width, label=file)
 
-    plt.ylabel('Tiempo en Map/Reduce')
-    plt.title('Tiempo en Map/Reduce de 5.000.000 para cada Query')
+    plt.ylabel('Tiempo en Map/Reduce', fontsize=16)
+    plt.title('Tiempo en Map/Reduce de 5.000.000 para cada Query', fontsize=16)
     plt.xticks(indices + bar_width * (num_files - 1) / 2, queries)
     plt.legend(title='File')
     plt.grid(False)
@@ -145,8 +145,8 @@ def combiner_load_analysis(df):
         plt.plot(group['Nodos'], group['Load_data'], marker='o', label=f'{label}')
 
     plt.xlabel('Cantidad de nodos')
-    plt.ylabel('Tiempo en carga de datos')
-    plt.title('Tiempo en carga de datos vs Cantidad de nodos')
+    plt.ylabel('Tiempo en carga de datos (s)', fontsize=16)
+    plt.title('Tiempo en carga de datos vs Cantidad de nodos', fontsize=16)
     plt.xticks(np.arange(1, 4+1, step=1))
     plt.legend(title='Combiner')
     plt.grid(False)
@@ -173,8 +173,8 @@ def combiner_map_analysis(df):
         plt.plot(group['Nodos'], group['Map_reduce'], marker='o', label=f'{label}')
 
     plt.xlabel('Cantidad de nodos')
-    plt.ylabel('Tiempo en carga de datos')
-    plt.title('Tiempo en carga de datos vs Cantidad de nodos')
+    plt.ylabel('Tiempo en map/reduce (s)', fontsize=16)
+    plt.title('Tiempo en map/reduce vs Cantidad de nodos', fontsize=16)
     plt.xticks(np.arange(1, 4+1, step=1))
     plt.legend(title='Combiner')
     plt.grid(False)
@@ -197,8 +197,8 @@ def cantidad_map_analysis(df):
         plt.plot(group['Cantidad'], group['Map_reduce'], marker='o', label=f'N = {combiner}')
 
     plt.xlabel('Cantidad de infracciones')
-    plt.ylabel('Tiempo en carga de datos')
-    plt.title('Tiempo en carga de datos vs Cantidad de infracciones')
+    plt.ylabel('Tiempo en map/reduce (s)', fontsize=16)
+    plt.title('Tiempo en map/reduce vs Cantidad de infracciones', fontsize=16)
     plt.legend(title='Nodos')
     plt.grid(False)
     plt.show()
@@ -219,8 +219,8 @@ def cantidad_load_analysis(df):
         plt.plot(group['Cantidad'], group['Load_data'], marker='o', label=f'N = {combiner}')
 
     plt.xlabel('Cantidad de infracciones')
-    plt.ylabel('Tiempo en carga de datos')
-    plt.title('Tiempo en carga de datos vs Cantidad de infracciones')
+    plt.ylabel('Tiempo en carga de datos (s)', fontsize=16)
+    plt.title('Tiempo en carga de datos vs Cantidad de infracciones', fontsize=16)
     plt.legend(title='Nodos')
     plt.grid(False)
     plt.show()
@@ -241,8 +241,8 @@ def key_map_analysis(df):
         plt.plot(group['Nodos'], group['Map_reduce'], marker='o', label=f'{combiner}')
 
     plt.xlabel('Cantidad de nodos')
-    plt.ylabel('Tiempo en Map/reduce')
-    plt.title('Tiempo en Map/reduce vs Cantidad de nodos')
+    plt.ylabel('Tiempo en Map/reduce (s)', fontsize=16)
+    plt.title('Tiempo en Map/reduce vs Cantidad de nodos', fontsize=16)
     plt.xticks(np.arange(1, 4+1, step=1))
     plt.legend(title='Key')
     plt.grid(False)
@@ -264,15 +264,53 @@ def key_load_analysis(df):
         plt.plot(group['Nodos'], group['Load_data'], marker='o', label=f'{combiner}')
 
     plt.xlabel('Cantidad de nodos')
-    plt.ylabel('Tiempo en Map/reduce')
-    plt.title('Tiempo en Map/reduce vs Cantidad de nodos')
+    plt.ylabel('Tiempo en carga de datos (s)', fontsize=16)
+    plt.title('Tiempo en carga de datos vs Cantidad de nodos', fontsize=16)
     plt.xticks(np.arange(1, 4+1, step=1))
     plt.legend(title='Key')
     plt.grid(False)
     plt.show()
 
+def filter_time_map(df):
+    # Filtros
+    df = df[df['Dev'] == "Extra"]
+
+    files = df['Key'].unique()
+    print(files)
+
+    plt.figure(figsize=(10, 6))
+
+    for file in files:
+        subset = df[df['Key'] == file]
+        plt.bar(file, subset['Map_reduce'].values[0], label=file)
+
+    plt.ylabel('Tiempo en map/reduce (s)', fontsize=16)
+    plt.title('Tiempo en map/reduce de 15 millos de registros para Query 4', fontsize=16)
+    plt.grid(False)
+    plt.show()
+
+def filter_time_load(df):
+    # Filtros
+    df = df[df['Dev'] == "Extra"]
+
+    files = df['Key'].unique()
+    print(files)
+
+    plt.figure(figsize=(10, 6))
+
+    for file in files:
+        subset = df[df['Key'] == file]
+        plt.bar(file, subset['Load_data'].values[0], label=file)
+
+    plt.ylabel('Tiempo en carga (s)', fontsize=16)
+    plt.title('Tiempo en carga de 15 millos de registros para Query 4', fontsize=16)
+    plt.grid(False)
+    plt.show()
+
 def main():
-    df = pd.read_csv('Hoja de cálculo sin título - Hoja 1.csv')
+    df = pd.read_csv('Data.csv')
+    filter_time_load(df)
+    filter_time_map(df)
     query_load_time_full(df)
     query_map_time_full(df)
     query_map_time_1N(df)
@@ -283,6 +321,7 @@ def main():
     cantidad_map_analysis(df)
     key_map_analysis(df)
     key_load_analysis(df)
+    
 
 if __name__ == "__main__":
     main()

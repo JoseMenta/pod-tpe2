@@ -36,6 +36,7 @@ public class HazelcastTest {
         ClientConfig clientConfig = new ClientConfig().setGroupConfig(groupConfig);
         client = hazelcastFactory.newHazelcastClient(clientConfig);
     }
+    // Test add multiple time the same (key,value) and check if the value is added multiple times
     @Test
     public void simpleListTest() {
         String mapName = "testMap";

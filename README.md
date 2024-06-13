@@ -14,7 +14,9 @@
          - [Query 3](#query-3)
          - [Query 4](#query-4)
          - [Query 5](#query-5)
+- [Test](#test)
 - [Aclaraciones sobre el proyecto](#aclaraciones-sobre-el-proyecto)
+
 
 # Multas de estacionamiento
 En este proyecto, se implementó un sistema para el análisis de multas de estacionamiento para los datos de las ciudades de Chicago y de Nueva York.
@@ -172,9 +174,9 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
    Group;Infraction A;Infraction B
    ```
 # Test
-Los tests del cliente consisten en archivos bash que hacen los cuales buildean el proyecto, corren el servidor como el cliente y ejecutan la query correspondiente. 
+Los tests del cliente consisten en archivos bash los cuales buildean el proyecto, corren el servidor como el cliente y ejecutan la query correspondiente.
 
-Es importante aclarar que los ExpectedResult son archivos que contienen el resultado esperado de la query. Es por eso que los test se corren con un dataset de la ciudad de CHI con unicamente 1000000 tickets. Para eso debemos hacer dentro de la carpeta `client/src/test/resources/inpath` con el archivo `ticketsCHI.csv` con todos los tickets y correr:
+Es importante aclarar que los ExpectedResult son archivos que contienen el resultado esperado de la query. Es por eso que los test se corren con un dataset de la ciudad de CHI con unicamente 1000000 tickets. Para eso debemos hacer dentro de la carpeta `client/src/test/resources/inpath` con el archivo `ticketsCHI.csv` con todos los tickets los siguientes comandos:
 
 ```Bash
 head -n 1000001 ticketsCHI.csv > ticketsCHI_reduced.csv

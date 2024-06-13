@@ -171,7 +171,22 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
    ```CSV
    Group;Infraction A;Infraction B
    ```
+# Test
+Los tests del cliente consisten en archivos bash que hacen los cuales buildean el proyecto, corren el servidor como el cliente y ejecutan la query correspondiente. 
 
+Es importante aclarar que los ExpectedResult son archivos que contienen el resultado esperado de la query. Es por eso que los test se corren con un dataset de la ciudad de CHI con unicamente 1000000 tickets. Para eso debemos hacer dentro de la carpeta `client/src/test/resources/inpath` con el archivo `ticketsCHI.csv` con todos los tickets y correr:
+
+```Bash
+head -n 1000001 ticketsCHI.csv > ticketsCHI_reduced.csv
+mv ticketsCHI.csv ticketsCHIFull.csv
+mv ticketsCHI_reduced.csv ticketsCHI.csv
+```
+Luego debemos ubicarnos en el root del proyecto y correr:
+
+```Bash
+ ./client/src/test/resources/query*/Query*_CHI.sh [-b]
+```
+En donde el parametro `-b` es opcional y se para buildear el proyecto entero. Por otro lado donde dice `*` debemos reemplazarlo por el numero de la query que queremos correr(de la 1 a la 4).
 # Aclaraciones sobre el proyecto
 Este proyecto es realizado para la materia Programación de Objetos Distribuidos del ITBA.
 **Los integrantes del grupo son:**

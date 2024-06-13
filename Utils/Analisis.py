@@ -271,8 +271,46 @@ def key_load_analysis(df):
     plt.grid(False)
     plt.show()
 
+def filter_time_map(df):
+    # Filtros
+    df = df[df['Dev'] == "Extra"]
+
+    files = df['Key'].unique()
+    print(files)
+
+    plt.figure(figsize=(10, 6))
+
+    for file in files:
+        subset = df[df['Key'] == file]
+        plt.bar(file, subset['Map_reduce'].values[0], label=file)
+
+    plt.ylabel('Tiempo en map/reduce (s)', fontsize=16)
+    plt.title('Tiempo en map/reduce de 15 millos de registros para Query 4', fontsize=16)
+    plt.grid(False)
+    plt.show()
+
+def filter_time_load(df):
+    # Filtros
+    df = df[df['Dev'] == "Extra"]
+
+    files = df['Key'].unique()
+    print(files)
+
+    plt.figure(figsize=(10, 6))
+
+    for file in files:
+        subset = df[df['Key'] == file]
+        plt.bar(file, subset['Load_data'].values[0], label=file)
+
+    plt.ylabel('Tiempo en carga (s)', fontsize=16)
+    plt.title('Tiempo en carga de 15 millos de registros para Query 4', fontsize=16)
+    plt.grid(False)
+    plt.show()
+
 def main():
     df = pd.read_csv('Data.csv')
+    filter_time_load(df)
+    filter_time_map(df)
     query_load_time_full(df)
     query_map_time_full(df)
     query_map_time_1N(df)
@@ -283,6 +321,7 @@ def main():
     cantidad_map_analysis(df)
     key_map_analysis(df)
     key_load_analysis(df)
+    
 
 if __name__ == "__main__":
     main()

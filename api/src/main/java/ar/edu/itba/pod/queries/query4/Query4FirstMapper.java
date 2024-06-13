@@ -45,8 +45,8 @@ public class Query4FirstMapper implements Mapper<LocalDateTime, Pair<String,Stri
      */
     @Override
     public void map(LocalDateTime dateTime, Pair<String,String> val, Context<String,String> context) {
-        if (Query4KeyPredicate.isDateTimeInRange(start, end, dateTime)) {
+//        if (Query4KeyPredicate.isDateTimeInRange(start, end, dateTime)) {
             context.emit(val.getFirst(),val.getSecond());
-        }
+//        }
     }
 }

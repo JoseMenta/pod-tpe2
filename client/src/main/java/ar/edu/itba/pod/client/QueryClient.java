@@ -213,7 +213,7 @@ public abstract class QueryClient implements Closeable {
 
     protected void writeTime(String message){
         try {
-            timeFile.write(LocalDateTime.now() + " " + message + "\n");
+            timeFile.write(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss:SSSS")) + " " + message + "\n");
         } catch (IOException e) {
             LOGGER.error("Could not write time to file");
             throw new RuntimeException(e);

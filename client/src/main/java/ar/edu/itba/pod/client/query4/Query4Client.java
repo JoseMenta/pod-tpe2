@@ -28,7 +28,7 @@ import static ar.edu.itba.pod.Util.QUERY_4_NAMESPACE;
 
 public class Query4Client extends QueryClient {
 
-    private static final List<String> CSV_HEADERS = List.of("Country","Plate","Tickets");
+    private static final List<String> CSV_HEADERS = List.of("County","Plate","Tickets");
 
     private final IMap<String, Infraction> infractionsMap;
 
@@ -100,15 +100,6 @@ public class Query4Client extends QueryClient {
                 .get();
 
         return aux;
-//        auxMap.putAll(aux);
-//        final KeyValueSource<Pair<String,String>,Integer> secondSource = KeyValueSource.fromMap(auxMap);
-//        final Job<Pair<String,String>,Integer>  secondJob = tracker.newJob(secondSource);
-//
-//        return secondJob
-//                .mapper(new Query4SecondMapper())
-//                .reducer(new Query4SecondReducer())
-//                .submit(new Query4Collator())
-//                .get();
     }
 
 

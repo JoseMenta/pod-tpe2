@@ -49,7 +49,7 @@ public class Query1Client extends QueryClient {
         loadData(this.ticketPath,
                 getMapper(),
                 Ticket::getIssueDate,
-                Ticket::getInfractionCode, //TODO: check if loading a 1 is valid
+                Ticket::getInfractionCode,
                 ticketsMap::put);
     }
 

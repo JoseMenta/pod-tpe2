@@ -189,6 +189,14 @@ Luego debemos ubicarnos en el root del proyecto y correr:
  ./client/src/test/resources/query*/Query*_CHI.sh [-b]
 ```
 En donde el parametro `-b` es opcional y se para buildear el proyecto entero. Por otro lado donde dice `*` debemos reemplazarlo por el numero de la query que queremos correr(de la 1 a la 4).
+
+Los resultados para comparar se obtienen ejecutando consultas en una base de datos Postgres con un subset de los datos. 
+Para poder replicarlos, se recomienda seguir los pasos de [este archivo](docs/postgresTest.md).
+
+> [!NOTE]
+> Es necesario cambiar algunas salidas para las consultas de posgres, ya que si se exporta a csv el resultado algunos valores con ',' son modificados.
+
+
 # Aclaraciones sobre el proyecto
 Este proyecto es realizado para la materia Programación de Objetos Distribuidos del ITBA.
 **Los integrantes del grupo son:**

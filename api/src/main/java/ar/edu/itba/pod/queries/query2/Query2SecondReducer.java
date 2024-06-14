@@ -49,7 +49,7 @@ public class Query2SecondReducer implements ReducerFactory<String, Pair<String,I
                         .map(infractions::get)
                         .map(Infraction::getDescription)
                         .collect(Collectors.toCollection(ArrayList::new));//use custom collector to have mutable list
-                IntStream.range(ans.size(),MAX_ELEMENTS).forEach(i -> ans.add("-")); //TODO: revisar si se hace en el cliente, es más de presentación
+                IntStream.range(ans.size(),MAX_ELEMENTS).forEach(i -> ans.add("-"));
                 return ans;
             }
         };

@@ -1,6 +1,5 @@
 package ar.edu.itba.pod.queries.query1;
 
-//TODO: revisar si puede ir sólo en el cliente
 //Se hace sólo en el cliente, por eso no tienen que ser serializable los datos
 
 import ar.edu.itba.pod.Util;

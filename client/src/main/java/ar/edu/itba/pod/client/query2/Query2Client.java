@@ -26,7 +26,7 @@ import static ar.edu.itba.pod.Util.QUERY_2_NAMESPACE;
 
 public class Query2Client extends QueryClient {
 
-    private static final List<String> CSV_HEADERS = List.of("Country","InfractionTop1","InfractionTop2","InfractionTop3");
+    private static final List<String> CSV_HEADERS = List.of("County","InfractionTop1","InfractionTop2","InfractionTop3");
 
     private final Map<String, Infraction> infractionsMap;
 

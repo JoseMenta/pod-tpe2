@@ -147,7 +147,7 @@ ORDER BY sum(tickets.fine_level1_amount)/total::numeric DESC;
 WITH tickets_per_area_and_plate AS(
     SELECT tickets.community_area_name, tickets.licence_plate_number, count(*) as total
     FROM tickets
-    WHERE issue_date>='1999-10-08 00:00:00.000000'::timestamp AND issue_date <= '2008-05-31 23:59:29.000000'::timestamp
+    WHERE issue_date>='1999-10-08 00:00:00.000000'::timestamp AND issue_date <= '2008-05-31 00:00:00.000000'::timestamp
     GROUP BY tickets.community_area_name, tickets.licence_plate_number
 )
 SELECT t.community_area_name,max(t.licence_plate_number), t.total

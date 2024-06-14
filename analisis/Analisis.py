@@ -188,12 +188,11 @@ def cantidad_map_analysis(df):
     df = df[df['Key'] == "Date"]
     df = df[df['Query'] == "Q1"]
     df = df[df['File'] == "NYC"]
-    df = df[df['Dev'] == "Jose"]
+    df = df[(df['Dev'] == "Jose") | (df['Dev'] == "Lauta_desk")]
 
     plt.figure(figsize=(10, 6))
-
     for combiner, group in df.groupby('Nodos'):
-        group = group.sort_values(by='Nodos')
+        group = group.sort_values(by='Cantidad')
         plt.plot(group['Cantidad'], group['Map_reduce'], marker='o', label=f'N = {combiner}')
 
     plt.xlabel('Cantidad de infracciones')
@@ -211,11 +210,12 @@ def cantidad_load_analysis(df):
     df = df[df['Key'] == "Date"]
     df = df[df['Query'] == "Q1"]
     df = df[df['File'] == "NYC"]
-    df = df[df['Dev'] == "Jose"]
+    df = df[(df['Dev'] == "Jose") | (df['Dev'] == "Lauta_desk")]
 
     plt.figure(figsize=(10, 6))
 
     for combiner, group in df.groupby('Nodos'):
+        group = group.sort_values(by='Cantidad')
         plt.plot(group['Cantidad'], group['Load_data'], marker='o', label=f'N = {combiner}')
 
     plt.xlabel('Cantidad de infracciones')
@@ -276,7 +276,6 @@ def filter_time_map(df):
     df = df[df['Dev'] == "Extra"]
 
     files = df['Key'].unique()
-    print(files)
 
     plt.figure(figsize=(10, 6))
 
@@ -294,7 +293,6 @@ def filter_time_load(df):
     df = df[df['Dev'] == "Extra"]
 
     files = df['Key'].unique()
-    print(files)
 
     plt.figure(figsize=(10, 6))
 
@@ -307,8 +305,43 @@ def filter_time_load(df):
     plt.grid(False)
     plt.show()
 
+def combiner_all_querys(df):
+    # Filtros
+    df = df[df['Nodos'] == 1]
+    #df = df[df['Combiner'] == True]
+    df = df[df['Cantidad'] == 5000000]
+    df = df[df['Key'] == "Date"]
+    #df = df[df['Query'] == "Q1"]
+    df = df[df['File'] == "NYC"]
+    df = df[df['Dev'] == "Lauta_desk"]
+
+    queries = df['Query'].unique()
+    indices = np.arange(len(queries))
+    files = df['Combiner'].unique()
+    num_files = len(files)
+    bar_width = 0.8 / num_files
+
+    plt.figure(figsize=(10, 6))
+
+    for i, file in enumerate(files):
+        if file:
+            label = 'Activado'
+        else:
+            label = 'Desactivado'
+        file_data = df[df['Combiner'] == file]
+        positions = indices + i * bar_width
+        plt.bar(positions, file_data['Map_reduce'], width=bar_width, label=f'{label}')
+
+    plt.ylabel('Tiempo en map/reduce', fontsize=16)
+    plt.title('Tiempo en map/reduce de 5 millos de registros para cada Query', fontsize=16)
+    plt.xticks(indices + bar_width * (num_files - 1) / 2, queries)
+    plt.legend(title='Combiner')
+    plt.grid(False)
+    plt.show()
+
+
 def main():
-    df = pd.read_csv('Data.csv')
+    df = pd.read_csv('Querys_times.csv')
     filter_time_load(df)
     filter_time_map(df)
     query_load_time_full(df)
@@ -317,10 +350,12 @@ def main():
     query_load_time_1N(df)
     combiner_load_analysis(df)
     combiner_map_analysis(df)
+    combiner_all_querys(df)
     cantidad_load_analysis(df)
     cantidad_map_analysis(df)
     key_map_analysis(df)
     key_load_analysis(df)
+
     
 
 if __name__ == "__main__":

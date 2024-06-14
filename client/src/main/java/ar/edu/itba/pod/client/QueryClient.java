@@ -24,11 +24,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public abstract class QueryClient implements Closeable {
@@ -183,25 +181,6 @@ public abstract class QueryClient implements Closeable {
                                           Function<D,K> keyMapper,
                                           Function<D,V> valueMapper,
                                           BiConsumer<K,V> consumer){
-//        LOGGER.info("Start loading data from {}",csvPath);
-//        writeTime("Start loading data from " + csvPath);
-//        if(this.hazelcast == null){
-//            throw new IllegalStateException();
-//        }
-//        try (final Stream<String> lines = Files.lines(Path.of(csvPath)).skip(1).parallel()) {
-//            lines.forEach(l ->{
-//                D data = rowMapper.apply(l);
-//                V value = valueMapper.apply(data);
-//                K key = keyMapper.apply(data); //extract the key from the value, or other data
-//                consumer.accept(key,value);
-//            });
-//            writeTime("Finished loading data for " + csvPath);
-//            LOGGER.info("Finished loading data for {}",csvPath);
-//        } catch (IOException e) {
-//            writeTime("Finished loading data with error for " + csvPath);
-//            LOGGER.error("Could not open file {} to load data",csvPath);
-//            throw new RuntimeException(e);
-//        }
         loadDataWithPredicate(csvPath,
                 rowMapper,
                 keyMapper,

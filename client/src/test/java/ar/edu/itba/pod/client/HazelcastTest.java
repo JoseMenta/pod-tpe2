@@ -6,7 +6,6 @@ import com.hazelcast.config.Config;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.config.MultiMapConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
 import com.hazelcast.core.MultiMap;
 import org.junit.After;
 import org.junit.Assert;
@@ -14,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
-import java.util.List;
 
 public class HazelcastTest {
     private TestHazelcastFactory hazelcastFactory;

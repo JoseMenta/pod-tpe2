@@ -5,7 +5,6 @@ import ar.edu.itba.pod.client.QueryClient;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Pair;
 import ar.edu.itba.pod.data.Ticket;
-import ar.edu.itba.pod.data.results.Query1Result;
 import ar.edu.itba.pod.data.results.Query5Result;
 import ar.edu.itba.pod.queries.query5.*;
 import com.hazelcast.core.IMap;
@@ -14,7 +13,6 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;

@@ -5,7 +5,6 @@ import ar.edu.itba.pod.client.QueryClient;
 import ar.edu.itba.pod.data.Infraction;
 import ar.edu.itba.pod.data.Pair;
 import ar.edu.itba.pod.data.Ticket;
-import ar.edu.itba.pod.data.results.Query1Result;
 import ar.edu.itba.pod.data.results.Query2Result;
 import ar.edu.itba.pod.queries.query2.*;
 import com.hazelcast.core.IMap;

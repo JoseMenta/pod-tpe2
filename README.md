@@ -34,7 +34,7 @@ Por otro lado, se utilizó la base de datos Hazelcast para almacenar los datos d
 3. Compilar el proyecto con el comando:
 
 ```Bash
-mvn clean install
+mvn clean package 
 ```
 
 Luego de la compilacion del proyecto, se generaran los siguientes archivos:
@@ -45,8 +45,6 @@ Luego de la compilacion del proyecto, se generaran los siguientes archivos:
 
 ### Servidor
 Para la ejecucion del servidor, debemos seguir los siguientes pasos:
-> [!NOTE]
-> Para poder seguir los siguientes pasos, debemos ubicarnos dentro de la carpeta del servidor.
 
 1. Ir al directorio del target.
 
@@ -68,7 +66,7 @@ Para la ejecucion del servidor, debemos seguir los siguientes pasos:
     ```Bash
    chmod u+x run-server.sh
    ```
-5. Ejecutar el servidor. <br>Opcionalmente, se puede indicar la máscara de red en la que se ejecutará el cluster de Hazelcast, con el parámetro `-Dmask` (por defecto, la máscara es `192.168.2.*`).
+5. Ejecutar el servidor. <br>Opcionalmente, se puede indicar la máscara de red en la que se ejecutará el cluster de Hazelcast, con el parámetro `-Dmask` (por defecto, la máscara es `127.0.0.*`).
 
     ```Bash
    sh run-server.sh [-Dmask=<Máscara de red>] 
@@ -76,8 +74,6 @@ Para la ejecucion del servidor, debemos seguir los siguientes pasos:
 
 ### Cliente
 Para la ejecución del cliente, debemos seguir los siguientes pasos:
-> [!NOTE]
-> Para poder seguir los siguientes pasos, debemos ubicarnos dentro de la carpeta del cliente.
 
 1. Ir al directorio del target.
 
@@ -105,6 +101,10 @@ Para la ejecución del cliente, debemos seguir los siguientes pasos:
 Al ejecutar cada cliente, dentro de la carpeta que se indica como `DoutPath`, se encontrará un archivo CSV, con el resultado de la consulta, y un archivo `time.txt` indicando el tiempo que tardó el sistema, tanto en subir los datos como en ejecutar el MapReduce.
 
 También, es muy importante que la carpeta indicada como `DinPath` tenga los archivos `ticketsCHI.csv` o `ticketsNYC.csv`, según la ciudad que se quiera analizar, al igual que los archivos `infractionsCHI.csv` o `infractionsNYC.csv`, respectivamente.
+
+> [!NOTE]
+> No se deben usar `''` o `""` para los argumentos de la VM. 
+
 #### Query 1
 La Query 1 consiste en obtener el total de multas por cada infracción.
 Para ejecutar la consulta, debemos seguir los siguientes pasos:
@@ -159,7 +159,7 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
    ```
 
 > [!NOTE]
-> Los parametros `-Dfrom` y `-Dto` deben ir en el siguiente formato: `dd/MM/yyyy`.
+> Los parametros `-Dfrom` y `-Dto` deben ir en el siguiente formato: `dd/MM/yyyy` sin el uso de comillas.
 
 #### Query 5
 La Query 5 consiste en obtener pares de infracciones que tienen, en grupos de a cientos, el mismo promedio de monto de multa.

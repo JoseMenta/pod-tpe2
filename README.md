@@ -2,6 +2,21 @@
 ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 ![Hazelcast](https://img.shields.io/badge/Hazelcast-FF6138?style=for-the-badge&logo=hazelcast&logoColor=white)
+- [Multas de estacionamiento](#multas-de-estacionamiento)
+   - [Requisitos](#requisitos)
+   - [Instalacion](#instalacion)
+   - [Ejecucion](#ejecucion)
+      - [Servidor](#servidor)
+      - [Cliente](#cliente)
+      - [Consultas](#consultas)
+         - [Query 1](#query-1)
+         - [Query 2](#query-2)
+         - [Query 3](#query-3)
+         - [Query 4](#query-4)
+         - [Query 5](#query-5)
+- [Test](#test)
+- [Aclaraciones sobre el proyecto](#aclaraciones-sobre-el-proyecto)
+
 
 # Multas de estacionamiento
 En este proyecto, se implementó un sistema para el análisis de multas de estacionamiento para los datos de las ciudades de Chicago y de Nueva York.
@@ -98,6 +113,11 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
     ```Bash
    sh query1.sh -Daddresses=<Dirección IP de al menos un nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde está el CSV> -DoutPath=<Carpeta donde se dejará los archivos de salida>
    ```
+   Al ejecutar dicha query se genera un archivo CSV con el resultado de la consulta en la carpeta indicada como `DoutPath` con el nombre de `query1.csv`. El formato del archivo sera el siguiente:
+
+   ```CSV
+      Infraction;Tickets
+   ```
 
 #### Query 2
 La Query 2 consiste en obtener las top 3 infracciones en cada barrio.
@@ -106,6 +126,10 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
 
     ```Bash
    sh query2.sh -Daddresses=<Dirección IP de al menos un nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde está el CSV> -DoutPath=<Carpeta donde se dejará los archivos de salida>
+   ```
+   Al ejecutar dicha query se genera un archivo CSV con el resultado de la consulta en la carpeta indicada como `DoutPath` con el nombre de `query2.csv`. El formato del archivo sera el siguiente:
+   ```CSV
+   County;InfractionTop1;InfractionTop2;InfractionTop3
    ```
 
 #### Query 3
@@ -116,6 +140,10 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
     ```Bash
    sh query3.sh -Daddresses=<Dirección IP de al menos un nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde está el CSV> -DoutPath=<Carpeta donde se dejará los archivos de salida> -Dn=<Número de agencias>
    ```
+   Al ejecutar dicha query se genera un archivo CSV con el resultado de la consulta en la carpeta indicada como `DoutPath` con el nombre de `query3.csv`. El formato del archivo sera el siguiente:
+   ```CSV
+   Issuing Agency;Percentage
+   ```
 
 #### Query 4
 La Query 4 consiste en obtener la patente con más infracciones de cada barrio en el rango [from, to].
@@ -124,6 +152,10 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
 
     ```Bash
    sh query4.sh -Daddresses=<Dirección IP de al menos un nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde está el CSV> -DoutPath=<Carpeta donde se dejará los archivos de salida> -Dfrom=<Fecha desde> -Dto=<Fecha hasta>
+   ```
+   Al ejecutar dicha query se genera un archivo CSV con el resultado de la consulta en la carpeta indicada como `DoutPath` con el nombre de `query4.csv`. El formato del archivo sera el siguiente:
+   ```CSV
+   County;Plate;Tickets
    ```
 
 > [!NOTE]
@@ -137,7 +169,26 @@ Para ejecutar la consulta, debemos seguir los siguientes pasos:
     ```Bash
    sh query5.sh -Daddresses=<Dirección IP de al menos un nodo de Hazelcast> -Dcity=<NYC O CHI>  -DinPath=<Caperta donde está el CSV> -DoutPath=<Carpeta donde se dejará los archivos de salida>
    ```
+   Al ejecutar dicha query se genera un archivo CSV con el resultado de la consulta en la carpeta indicada como `DoutPath` con el nombre de `query5.csv`. El formato del archivo sera el siguiente:
+   ```CSV
+   Group;Infraction A;Infraction B
+   ```
+# Test
+Los tests del cliente consisten en archivos bash los cuales buildean el proyecto, corren el servidor como el cliente y ejecutan la query correspondiente.
 
+Es importante aclarar que los ExpectedResult son archivos que contienen el resultado esperado de la query. Es por eso que los test se corren con un dataset de la ciudad de CHI con unicamente 1000000 tickets. Para eso debemos hacer dentro de la carpeta `client/src/test/resources/inpath` con el archivo `ticketsCHI.csv` con todos los tickets los siguientes comandos:
+
+```Bash
+head -n 1000001 ticketsCHI.csv > ticketsCHI_reduced.csv
+mv ticketsCHI.csv ticketsCHIFull.csv
+mv ticketsCHI_reduced.csv ticketsCHI.csv
+```
+Luego debemos ubicarnos en el root del proyecto y correr:
+
+```Bash
+ ./client/src/test/resources/query*/Query*_CHI.sh [-b]
+```
+En donde el parametro `-b` es opcional y se para buildear el proyecto entero. Por otro lado donde dice `*` debemos reemplazarlo por el numero de la query que queremos correr(de la 1 a la 4).
 # Aclaraciones sobre el proyecto
 Este proyecto es realizado para la materia Programación de Objetos Distribuidos del ITBA.
 **Los integrantes del grupo son:**
